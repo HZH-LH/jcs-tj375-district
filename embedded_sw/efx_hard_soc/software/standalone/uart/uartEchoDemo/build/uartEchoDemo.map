@@ -1,0 +1,418 @@
+Archive member included to satisfy reference by file (symbol)
+
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+                              build/obj_files/start.o (__libc_init_array)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+                              build/obj_files/main.o (strcat)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o) (strcpy)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+                              build/obj_files/main.o (strlen)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+                              build/obj_files/main.o (pow)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o) (__ieee754_pow)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o) (__ieee754_sqrt)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o) (fabs)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o) (finite)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_lib_ver.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o) (__fdlib_version)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o) (nan)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o) (rint)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o) (scalbn)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o) (__errno)
+d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+                              d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o) (_impure_ptr)
+
+Discarded input sections
+
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+ .group         0x0000000000000000        0xc build/obj_files/main.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x0000000000001000 0x0000000000051000 axwl !r
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD build/obj_files/main.o
+LOAD build/obj_files/start.o
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/rv32imafdc/ilp32d\libgcc.a
+                0x0000000000001000                __stack_size = DEFINED (__stack_size)?__stack_size:0x1000
+
+.init           0x0000000000001000       0x8a
+ *(SORT_NONE(.init))
+ .init          0x0000000000001000       0x8a build/obj_files/start.o
+                0x0000000000001000                _start
+                0x0000000000001012                smp_slave
+                0x000000000000102c                smp_unlock
+                0x0000000000001088                _init
+
+.text           0x000000000000108a     0x1286
+ *(.text.Proc_1)
+ *(.text.Proc_2)
+ *(.text.Proc_3)
+ *(.text.Proc_4)
+ *(.text.Proc_5)
+ *(.text.Proc_6)
+ *(.text.Proc_7)
+ *(.text.Proc_8)
+ *(.text.Func_1)
+ *(.text.Func_2)
+ *(.text.Func_3)
+ *(.text.strcpy)
+ .text.strcpy   0x000000000000108a       0x7a d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+                0x000000000000108a                strcpy
+ *libc.a:*(.text .text.*)
+ .text          0x0000000000001104        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+ .text.__libc_init_array
+                0x0000000000001104       0x6a d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+                0x0000000000001104                __libc_init_array
+ .text          0x000000000000116e        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+ .text.strcat   0x000000000000116e       0x68 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+                0x000000000000116e                strcat
+ .text          0x00000000000011d6        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+ .text          0x00000000000011d6        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+ .text.strlen   0x00000000000011d6       0x66 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+                0x00000000000011d6                strlen
+ *(.text.main)
+ *(.text.unlikely .text.unlikely.*)
+ *(.text.startup .text.startup.*)
+ *(.text .text.*)
+ .text          0x000000000000123c      0x498 build/obj_files/main.o
+                0x00000000000016a2                main
+ .text          0x00000000000016d4        0x0 build/obj_files/start.o
+ .text          0x00000000000016d4        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+ .text.pow      0x00000000000016d4      0x12c d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+                0x00000000000016d4                pow
+ .text          0x0000000000001800        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+ .text.__ieee754_pow
+                0x0000000000001800      0x6de d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+                0x0000000000001800                __ieee754_pow
+ .text          0x0000000000001ede        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+ .text.__ieee754_sqrt
+                0x0000000000001ede      0x1b0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+                0x0000000000001ede                __ieee754_sqrt
+ .text          0x000000000000208e        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+ .text.fabs     0x000000000000208e       0x12 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+                0x000000000000208e                fabs
+ .text          0x00000000000020a0        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+ .text.finite   0x00000000000020a0       0x16 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+                0x00000000000020a0                finite
+ .text          0x00000000000020b6        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_lib_ver.o)
+ .text          0x00000000000020b6        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+ .text.nan      0x00000000000020b6        0xa d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+                0x00000000000020b6                nan
+ .text          0x00000000000020c0        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+ .text.rint     0x00000000000020c0      0x156 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+                0x00000000000020c0                rint
+ .text          0x0000000000002216        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+ .text.scalbn   0x0000000000002216       0xf2 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+                0x0000000000002216                scalbn
+ .text          0x0000000000002308        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
+ .text.__errno  0x0000000000002308        0x8 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
+                0x0000000000002308                __errno
+ .text          0x0000000000002310        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+ *(.gnu.linkonce.t.*)
+ *(.note.gnu.build-id)
+
+.sdata2._global_impure_ptr
+                0x0000000000002310        0x4
+ .sdata2._global_impure_ptr
+                0x0000000000002310        0x4 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+                0x0000000000002310                _global_impure_ptr
+
+.rela.dyn       0x0000000000002314        0x0
+ .rela.init     0x0000000000002314        0x0 build/obj_files/main.o
+ .rela.text.__libc_init_array
+                0x0000000000002314        0x0 build/obj_files/main.o
+
+.fini
+ *(SORT_NONE(.fini))
+                [!provide]                        PROVIDE (__etext = .)
+                [!provide]                        PROVIDE (_etext = .)
+                [!provide]                        PROVIDE (etext = .)
+                0x0000000000002314                . = ALIGN (0x4)
+
+.preinit_array  0x0000000000002314        0x0
+                0x0000000000002314                PROVIDE (__preinit_array_start = .)
+ *(.preinit_array)
+                0x0000000000002314                PROVIDE (__preinit_array_end = .)
+
+.init_array     0x0000000000002314        0x0
+                0x0000000000002314                PROVIDE (__init_array_start = .)
+ *(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*))
+ *(.init_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .ctors)
+                0x0000000000002314                PROVIDE (__init_array_end = .)
+
+.fini_array     0x0000000000002314        0x0
+                [!provide]                        PROVIDE (__fini_array_start = .)
+ *(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*))
+ *(.fini_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .dtors)
+                [!provide]                        PROVIDE (__fini_array_end = .)
+
+.ctors
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+ *(SORT_BY_NAME(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+ *(SORT_BY_NAME(.dtors.*))
+ *(.dtors)
+
+.lalign         0x0000000000002314        0x0
+                0x0000000000002314                PROVIDE (_data_lma = .)
+
+.dalign         0x0000000000002314        0x0
+                0x0000000000002314                PROVIDE (_data = .)
+
+.data           0x0000000000002318      0x62a
+ *(.rdata)
+ *(.rodata .rodata.*)
+ .rodata.str1.4
+                0x0000000000002318       0x96 build/obj_files/main.o
+ *fill*         0x00000000000023ae        0x2 
+ .rodata.pow.cst8
+                0x00000000000023b0       0x18 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+ .rodata.__ieee754_pow.cst8
+                0x00000000000023c8      0x108 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+                                        0x110 (size before relaxing)
+ .rodata.__ieee754_pow.str1.4
+                0x00000000000024d0       0x98 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+                                          0x1 (size before relaxing)
+ .rodata.nan.cst8
+                0x00000000000024d0        0x8 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+ .rodata.TWO52  0x00000000000024d8       0x10 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+ .rodata.scalbn.cst8
+                0x00000000000024e8       0x10 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+                                         0x20 (size before relaxing)
+ *(.gnu.linkonce.r.*)
+ *(.data .data.*)
+ .data          0x00000000000024f8        0x0 build/obj_files/main.o
+ .data          0x00000000000024f8        0x0 build/obj_files/start.o
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_lib_ver.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
+ .data          0x00000000000024f8        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+ .data.impure_data
+                0x00000000000024f8      0x428 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+ *(.gnu.linkonce.d.*)
+                0x0000000000002920                . = ALIGN (0x8)
+                0x0000000000003110                PROVIDE (__global_pointer$ = (. + 0x7f0))
+ *(.sdata .sdata.*)
+ .sdata.__fdlib_version
+                0x0000000000002920        0x4 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_lib_ver.o)
+                0x0000000000002920                __fdlib_version
+ .sdata._impure_ptr
+                0x0000000000002924        0x4 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+                0x0000000000002924                _impure_ptr
+ *(.gnu.linkonce.s.*)
+                0x0000000000002928                . = ALIGN (0x8)
+ *(.srodata.cst16)
+ *(.srodata.cst8)
+ .srodata.cst8  0x0000000000002928       0x10 build/obj_files/main.o
+ *(.srodata.cst4)
+ *(.srodata.cst2)
+ *(.srodata .srodata.*)
+                0x0000000000002942                . = (. + 0xa)
+ *fill*         0x0000000000002938        0xa 
+                0x0000000000002944                . = ALIGN (0x4)
+                0x0000000000002944                PROVIDE (_edata = .)
+                [!provide]                        PROVIDE (edata = .)
+                [!provide]                        PROVIDE (_fbss = .)
+                0x0000000000002944                PROVIDE (__bss_start = .)
+
+.bss            0x0000000000002944        0x8
+ *(.sbss*)
+ *(.gnu.linkonce.sb.*)
+ *(.bss .bss.*)
+ .bss           0x0000000000002944        0x0 build/obj_files/main.o
+ .bss           0x0000000000002944        0x8 build/obj_files/start.o
+                0x0000000000002944                smp_lottery_target
+                0x0000000000002948                smp_lottery_lock
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_lib_ver.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
+ .bss           0x000000000000294c        0x0 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-impure.o)
+ *(.gnu.linkonce.b.*)
+ *(COMMON)
+                0x000000000000294c                . = ALIGN (0x4)
+                0x0000000000002950                . = ALIGN (0x8)
+                0x0000000000002950                PROVIDE (_end = .)
+                [!provide]                        PROVIDE (end = .)
+
+.stack          0x0000000000002950     0x1000
+                [!provide]                        PROVIDE (_heap_end = .)
+                0x0000000000001000                . = __stack_size
+ *fill*         0x0000000000002950     0x1000 
+                0x0000000000003950                PROVIDE (_sp = .)
+                0x0000000000003950                __freertos_irq_stack_top = .
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/rv32imafdc/ilp32d\libgcc.a
+START GROUP
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/rv32imafdc/ilp32d\libgcc.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a
+END GROUP
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/rv32imafdc/ilp32d\libgcc.a
+START GROUP
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/rv32imafdc/ilp32d\libgcc.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a
+LOAD d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libnosys.a
+END GROUP
+OUTPUT(build/uartEchoDemo.elf elf32-littleriscv)
+
+.debug_info     0x0000000000000000     0x136a
+ .debug_info    0x0000000000000000     0x1344 build/obj_files/main.o
+ .debug_info    0x0000000000001344       0x26 build/obj_files/start.o
+
+.debug_abbrev   0x0000000000000000      0x48b
+ .debug_abbrev  0x0000000000000000      0x477 build/obj_files/main.o
+ .debug_abbrev  0x0000000000000477       0x14 build/obj_files/start.o
+
+.debug_loc      0x0000000000000000      0x705
+ .debug_loc     0x0000000000000000      0x705 build/obj_files/main.o
+
+.debug_aranges  0x0000000000000000       0x40
+ .debug_aranges
+                0x0000000000000000       0x20 build/obj_files/main.o
+ .debug_aranges
+                0x0000000000000020       0x20 build/obj_files/start.o
+
+.debug_macro    0x0000000000000000     0x1ed7
+ .debug_macro   0x0000000000000000      0x1c8 build/obj_files/main.o
+ .debug_macro   0x00000000000001c8      0x796 build/obj_files/main.o
+ .debug_macro   0x000000000000095e      0x2f8 build/obj_files/main.o
+ .debug_macro   0x0000000000000c56       0x22 build/obj_files/main.o
+ .debug_macro   0x0000000000000c78       0x8e build/obj_files/main.o
+ .debug_macro   0x0000000000000d06       0x51 build/obj_files/main.o
+ .debug_macro   0x0000000000000d57      0x103 build/obj_files/main.o
+ .debug_macro   0x0000000000000e5a       0x6a build/obj_files/main.o
+ .debug_macro   0x0000000000000ec4      0x1df build/obj_files/main.o
+ .debug_macro   0x00000000000010a3       0xc4 build/obj_files/main.o
+ .debug_macro   0x0000000000001167       0x10 build/obj_files/main.o
+ .debug_macro   0x0000000000001177       0x1c build/obj_files/main.o
+ .debug_macro   0x0000000000001193       0x16 build/obj_files/main.o
+ .debug_macro   0x00000000000011a9      0x1d7 build/obj_files/main.o
+ .debug_macro   0x0000000000001380       0x1c build/obj_files/main.o
+ .debug_macro   0x000000000000139c       0x82 build/obj_files/main.o
+ .debug_macro   0x000000000000141e       0x58 build/obj_files/main.o
+ .debug_macro   0x0000000000001476       0x19 build/obj_files/main.o
+ .debug_macro   0x000000000000148f       0x52 build/obj_files/main.o
+ .debug_macro   0x00000000000014e1       0x34 build/obj_files/main.o
+ .debug_macro   0x0000000000001515       0x34 build/obj_files/main.o
+ .debug_macro   0x0000000000001549       0x16 build/obj_files/main.o
+ .debug_macro   0x000000000000155f      0x10e build/obj_files/main.o
+ .debug_macro   0x000000000000166d       0x8d build/obj_files/main.o
+ .debug_macro   0x00000000000016fa       0x16 build/obj_files/main.o
+ .debug_macro   0x0000000000001710       0x43 build/obj_files/main.o
+ .debug_macro   0x0000000000001753       0x34 build/obj_files/main.o
+ .debug_macro   0x0000000000001787       0x10 build/obj_files/main.o
+ .debug_macro   0x0000000000001797       0x52 build/obj_files/main.o
+ .debug_macro   0x00000000000017e9      0x182 build/obj_files/main.o
+ .debug_macro   0x000000000000196b      0x339 build/obj_files/main.o
+ .debug_macro   0x0000000000001ca4       0x16 build/obj_files/main.o
+ .debug_macro   0x0000000000001cba       0x29 build/obj_files/main.o
+ .debug_macro   0x0000000000001ce3      0x1a9 build/obj_files/main.o
+ .debug_macro   0x0000000000001e8c       0x16 build/obj_files/main.o
+ .debug_macro   0x0000000000001ea2       0x35 build/obj_files/main.o
+
+.debug_line     0x0000000000000000      0xfc2
+ .debug_line    0x0000000000000000      0xea5 build/obj_files/main.o
+ .debug_line    0x0000000000000ea5      0x11d build/obj_files/start.o
+
+.debug_str      0x0000000000000000     0x91a5
+ .debug_str     0x0000000000000000     0x9184 build/obj_files/main.o
+                                       0x9454 (size before relaxing)
+ .debug_str     0x0000000000009184       0x21 build/obj_files/start.o
+                                         0x7b (size before relaxing)
+
+.comment        0x0000000000000000       0x33
+ .comment       0x0000000000000000       0x33 build/obj_files/main.o
+                                         0x34 (size before relaxing)
+
+.debug_frame    0x0000000000000000      0x530
+ .debug_frame   0x0000000000000000      0x284 build/obj_files/main.o
+ .debug_frame   0x0000000000000284       0x3c d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-init.o)
+ .debug_frame   0x00000000000002c0       0x30 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcat.o)
+ .debug_frame   0x00000000000002f0       0x20 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strcpy.o)
+ .debug_frame   0x0000000000000310       0x20 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libc.a(lib_a-strlen.o)
+ .debug_frame   0x0000000000000330       0x50 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-w_pow.o)
+ .debug_frame   0x0000000000000380       0x78 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_pow.o)
+ .debug_frame   0x00000000000003f8       0x34 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-e_sqrt.o)
+ .debug_frame   0x000000000000042c       0x28 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_fabs.o)
+ .debug_frame   0x0000000000000454       0x28 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_finite.o)
+ .debug_frame   0x000000000000047c       0x20 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_nan.o)
+ .debug_frame   0x000000000000049c       0x34 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_rint.o)
+ .debug_frame   0x00000000000004d0       0x40 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libm.a(lib_a-s_scalbn.o)
+ .debug_frame   0x0000000000000510       0x20 d:/efinity/efinity-riscv-ide-2025.2/toolchain/bin/../lib/gcc/riscv-none-embed/8.3.0/../../../../riscv-none-embed/lib/rv32imafdc/ilp32d\libg.a(lib_a-errno.o)
