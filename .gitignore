@@ -1,0 +1,37 @@
+# Efinity transient work directories
+/work_dbg/
+/work_pnr/
+/work_pt/
+/work_syn/
+
+# Keep deployable FPGA artifacts, ignore the rest of outflow.
+/outflow/*
+!/outflow/mem_test.bit
+!/outflow/mem_test.hex
+
+# Simulator databases and waveforms
+**/work/
+*.wlf
+*.vcd
+*.qdb
+*.qpg
+*.qtl
+*.vstf
+transcript
+
+# Generated IP examples and testbench payloads are not required by the project.
+/ip/**/Testbench/
+/ip/EfxSapphireHpSoc_slb/Ti375C529_devkit/
+**/.lock
+
+# Local backups and editor files
+*.bak
+*.backup
+*.tmp
+*.rar
+*.zip
+.vscode/
+.idea/
+/embedded_sw/efx_hard_soc/.metadata/
+
+# RISC-V build directories are intentionally tracked so each revision remains deployable.
