@@ -1590,7 +1590,9 @@ raw_burst_serializer #(
     .out_vs(ch0_vs),
     .out_hs(ch0_hs),
     .out_de(ch0_de),
-    .out_raw2({ch0_b, ch0_g}),
+    // Match video_primary: framebuffer vout was {ch0_g,ch0_b}, then the
+    // Debayer consumed {ch0_b,ch0_g}. Preserve that intentional RAW pair flip.
+    .out_raw2({ch0_g, ch0_b}),
     .fifo_level(bram_fifo_level),
     .active(raw_serializer_active),
     .overflow_sticky(bram_overflow_sticky),
@@ -1796,7 +1798,6 @@ wire [15:0] h_cnt;
 wire [15:0] v_cnt;
 
 reg [2:0] diag_dsi_mode = 3'd0;
-reg [2:0] diag_color_map_mode = 3'd1;
 wire [7:0] diag_uart1_rx_data;
 wire [7:0] diag_uart2_rx_data;
 wire diag_uart1_rx_valid;
@@ -1824,7 +1825,6 @@ wire [7:0] diag_cmd_data = diag_uart2_rx_valid ? diag_uart2_rx_data : diag_uart1
 always @(posedge i_sysclk_div2 or negedge diag_uart_rst_n) begin
     if (!diag_uart_rst_n) begin
         diag_dsi_mode <= 3'd0;
-        diag_color_map_mode <= 3'd1;
     end else if (diag_cmd_valid) begin
         case (diag_cmd_data)
             "C", "c": diag_dsi_mode <= 3'd0;
@@ -1834,30 +1834,6 @@ always @(posedge i_sysclk_div2 or negedge diag_uart_rst_n) begin
             "R", "r": diag_dsi_mode <= 3'd4;
             "F", "f": diag_dsi_mode <= 3'd5;
             "T", "t": diag_dsi_mode <= 3'd6;
-            "0": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd0;
-            end
-            "1": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd1;
-            end
-            "2": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd2;
-            end
-            "3": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd3;
-            end
-            "4": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd4;
-            end
-            "5": begin
-                diag_dsi_mode <= 3'd0;
-                diag_color_map_mode <= 3'd5;
-            end
             default: diag_dsi_mode <= diag_dsi_mode;
         endcase
     end
@@ -2079,35 +2055,6 @@ wire bram_display_vs;
 wire bram_display_hs;
 wire bram_display_de;
 wire [47:0] bram_display_rgb_datax2;
-wire [47:0] diag_color_swap_rb = {
-    cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[47:40],
-    cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[23:16]
-};
-wire [47:0] diag_color_swap_rg = {
-    cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[47:40], cam0_dsi_rgb_datax2[31:24],
-    cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[23:16], cam0_dsi_rgb_datax2[7:0]
-};
-wire [47:0] diag_color_swap_gb = {
-    cam0_dsi_rgb_datax2[47:40], cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[39:32],
-    cam0_dsi_rgb_datax2[23:16], cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[15:8]
-};
-wire [47:0] diag_color_rgb_to_gbr = {
-    cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[47:40],
-    cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[23:16]
-};
-reg [47:0] diag_camera_rgb_datax2;
-
-always @(*) begin
-    case (diag_color_map_mode)
-        3'd0: diag_camera_rgb_datax2 = rgb_datax2;
-        3'd1: diag_camera_rgb_datax2 = cam0_dsi_rgb_datax2;
-        3'd2: diag_camera_rgb_datax2 = diag_color_swap_rb;
-        3'd3: diag_camera_rgb_datax2 = diag_color_swap_rg;
-        3'd4: diag_camera_rgb_datax2 = diag_color_swap_gb;
-        3'd5: diag_camera_rgb_datax2 = diag_color_rgb_to_gbr;
-        default: diag_camera_rgb_datax2 = cam0_dsi_rgb_datax2;
-    endcase
-end
 
 rgb565_bram_framebuffer #(
     .SRC_WIDTH(960),
@@ -2117,7 +2064,7 @@ rgb565_bram_framebuffer #(
     .rst_n(pixel_data_en | pixel_data_en1),
     .in_vs(rgb_vs),
     .in_de(rgb_de),
-    .in_rgb2(diag_camera_rgb_datax2),
+    .in_rgb2(cam0_dsi_rgb_datax2),
     .test_pattern_enable(diag_dsi_mode == 3'd6),
     .timing_vs(o_vs),
     .timing_hs(o_hs),
@@ -2306,7 +2253,7 @@ function [7:0] dbg_hex_char;
   end
 endfunction
 
-localparam [8:0] DIAG_MSG_LEN = 9'd280;
+localparam [8:0] DIAG_MSG_LEN = 9'd275;
 localparam [6:0] DIAG_UART_CLKS_PER_BIT = 7'd70; // i_sysclk_div2 is 70 MHz, UART2 follows capture at 1 Mbps.
 localparam [1:0] DIAG_TX_IDLE  = 2'd0;
 localparam [1:0] DIAG_TX_START = 2'd1;
@@ -2604,15 +2551,10 @@ always @(*) begin
         9'd268: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[7:4]);
         9'd269: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[3:0]);
         9'd270: diag_uart2_tx_data <= " ";
-        9'd271: diag_uart2_tx_data <= "c";
-        9'd272: diag_uart2_tx_data <= "m";
-        9'd273: diag_uart2_tx_data <= "=";
-        9'd274: diag_uart2_tx_data <= dbg_hex_char({1'b0, diag_color_map_mode});
-        9'd275: diag_uart2_tx_data <= " ";
-        9'd276: diag_uart2_tx_data <= "v";
-        9'd277: diag_uart2_tx_data <= "B";
-        9'd278: diag_uart2_tx_data <= 8'h0d;
-        9'd279: diag_uart2_tx_data <= 8'h0a;
+        9'd271: diag_uart2_tx_data <= "v";
+        9'd272: diag_uart2_tx_data <= "G";
+        9'd273: diag_uart2_tx_data <= 8'h0d;
+        9'd274: diag_uart2_tx_data <= 8'h0a;
         default: diag_uart2_tx_data <= 8'h0a;
   endcase
 end

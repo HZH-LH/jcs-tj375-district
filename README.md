@@ -238,6 +238,31 @@ Current stage-isolation meanings:
   GBR. The UART `cm=X` field records the active selection. Compare the same
   red, green, blue, white, yellow, and black references in every mode before
   choosing a permanent map.
+- Diagnostic `vC` removes the temporary channel-permutation matrix. The
+  default `N`/`0` mode now passes `rgb_datax2` directly from the neutral
+  `video_primary` Debayer into the BRAM writer. Command `E`/`1` enables the
+  capture/Demo top-level enhancement (green at 62.5%, then 200% saturating
+  brightness on all channels). Both commands return to camera display mode;
+  UART reports the selection as `ce=0` or `ce=1`.
+- Diagnostic `vD` adds an independent R/B swap toggle. Command `X` toggles it
+  and returns to camera mode; UART reports `rb=0/1`. The framebuffer samples
+  the actual selected pixel written at the source-frame center and reports it
+  as `cp=RRGGBB`. Keep the same colored target centered until `cp` stabilizes
+  before recording each measurement.
+- Diagnostic `vE` restores the RAW pair ordering used by `video_primary`:
+  serializer output connects as `{ch0_g,ch0_b}` and the Debayer consumes
+  `{ch0_b,ch0_g}`. The previous direct `{ch0_b,ch0_g}` connection omitted this
+  intentional adjacent-pixel flip and shifted the Bayer horizontal phase.
+- Version `vF` is the cleaned fixed-color build. The temporary `N/E`, R/B
+  swap, and center-pixel sampling controls are removed. Camera video always
+  uses the capture-style 200% saturating brightness with green set to 87.5%
+  (`g - (g >> 3)`). System-health UART diagnostics remain available.
+- Version `vG` keeps the cleaned fixed-color structure and restores the exact
+  capture/Demo enhancement parameters: green at 62.5%
+  (`g - (g >> 2) - (g >> 3)`) followed by 200% saturating brightness on all
+  channels. There are no runtime color-map, channel-swap, enhancement-toggle,
+  or center-pixel sampling controls. System-health UART diagnostics and the
+  BRAM/DSI isolation modes remain available for maintenance.
 - `R` and `F` do not use panel-compatible frame timing. A black result in these
   modes does not prove CSI or RAW serialization has failed; rely on their UART
   activity fields for those stages.
