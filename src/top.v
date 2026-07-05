@@ -1,5 +1,6 @@
 ﻿
-`define FRAME_BUFFER
+`define BRAM_VIDEO_PATH
+// `define FRAME_BUFFER
 // `define CONTRAST_BRIGHT_EN
 // `define UVC_EN 
 module top #(
@@ -756,7 +757,7 @@ end
 // UART1 实例（与PC通信）
 simple_uart #(
   .CLK_FREQ(5000000),
-  .BAUD_RATE(115200)
+  .BAUD_RATE(1000000)
 ) u_uart1 (
   .clk(CLK_5M),
   .rst_n(arst_n),
@@ -772,7 +773,7 @@ simple_uart #(
 // UART2 实例（与外设通信）
 simple_uart #(
   .CLK_FREQ(5000000),
-  .BAUD_RATE(115200)
+  .BAUD_RATE(1000000)
 ) u_uart2 (
   .clk(CLK_5M),
   .rst_n(diag_uart_rst_n),
@@ -851,7 +852,11 @@ assign ddr_inst_CFG_SEL      = 1'b0;
 
 assign axi0_ARESETn = ddr_cfg_ok;
 wire sys_rst_n = ddr_cfg_ok;
+`ifdef BRAM_VIDEO_PATH
+wire video_run_n = dsi_rst_n;
+`else
 wire video_run_n = dsi_rst_n & ddr_cfg_ok;
+`endif
 wire pixel_data_en;     // DSI TX 0 使能信号
 wire pixel_data_en1;    // DSI TX 1 使能信号
 
@@ -1061,6 +1066,43 @@ wire rx_out_hs1;
 wire rx_out_vs1;
 wire [PACK_BIT-1:0] rx_out_data1;
 
+wire [7:0] ch0_r;
+wire [7:0] ch0_g;
+wire [7:0] ch0_b;
+wire ch0_vs;
+wire ch0_hs;
+wire ch0_de;
+wire [7:0] ch1_r;
+wire [7:0] ch1_g;
+wire [7:0] ch1_b;
+wire ch1_vs;
+wire ch1_hs;
+wire ch1_de;
+
+wire [13:0] bram_fifo_level;
+wire bram_stream_active;
+wire bram_overflow_sticky;
+wire bram_underflow_sticky;
+wire [15:0] bram_overflow_count;
+wire [15:0] bram_underflow_count;
+wire [15:0] bram_input_frame_count;
+wire [15:0] bram_output_frame_count;
+wire [15:0] bram_resync_count;
+wire raw_serializer_active;
+wire [15:0] raw_input_frame_count;
+wire [15:0] raw_serialized_frame_count;
+wire bram_display_valid;
+wire bram_frame_pending;
+wire [15:0] bram_captured_frame_count;
+wire [15:0] bram_displayed_frame_count;
+wire [15:0] bram_swap_count;
+wire [15:0] bram_dropped_frame_count;
+wire [15:0] bram_measured_frame_lines;
+wire [15:0] bram_measured_line_de_min;
+wire [15:0] bram_measured_line_de_max;
+wire [19:0] bram_measured_frame_de_total;
+wire bram_capture_error_sticky;
+
 
   soft_mipi_rx_top # (
     .PACK_BIT(PACK_BIT)
@@ -1188,12 +1230,6 @@ wire [PACK_BIT-1:0] rx_out_data1;
 //frame_buffer 0 
 //============================================================================================	
   
-  wire [7:0] 	ch0_r;
-  wire [7:0]    ch0_g;
-  wire [7:0]    ch0_b;
-  wire ch0_vs;
-  wire ch0_hs;
-  wire ch0_de;
 frame_buffer #(
 .AXI_DATA_WIDTH ( AXI_DATA_WIDTH	),
 .I_VID_WIDTH    ( I_VID_WIDTH       ),
@@ -1340,12 +1376,6 @@ wire [12:0] vact1;
 //   );
 	
 
-wire [7:0] 	ch1_r;
-wire [7:0]  ch1_g;
-wire [7:0]  ch1_b;
-wire ch1_vs;
-wire ch1_hs;
-wire ch1_de;
 frame_buffer #(
 .AXI_DATA_WIDTH ( AXI_DATA_WIDTH	),
 .I_VID_WIDTH    ( I_VID_WIDTH       ),
@@ -1538,6 +1568,82 @@ ur_axi_interconnect
     .m_axi_rvalid                       (axi0_RVALID     ), //(axi_m1_rvalid    ), 
     .m_axi_rready                       (axi0_RREADY     )  //(axi_m1_rready    )
 );
+assign bram_fifo_level = 14'd0;
+assign bram_stream_active = 1'b0;
+assign bram_overflow_sticky = 1'b0;
+assign bram_underflow_sticky = 1'b0;
+assign bram_overflow_count = 16'd0;
+assign bram_underflow_count = 16'd0;
+assign bram_input_frame_count = 16'd0;
+assign bram_output_frame_count = 16'd0;
+assign bram_resync_count = 16'd0;
+`else
+raw_burst_serializer #(
+    .FIFO_DEPTH_WORDS(8192)
+) u_raw_burst_serializer (
+    .clk(i_sysclk_div2),
+    .rst_n(pixel_data_en | pixel_data_en1),
+    .in_vs(rx_out_vs),
+    .in_de(rx_out_de),
+    .in_raw4({rx_out_data[39:32], rx_out_data[29:22],
+              rx_out_data[19:12], rx_out_data[9:2]}),
+    .out_vs(ch0_vs),
+    .out_hs(ch0_hs),
+    .out_de(ch0_de),
+    .out_raw2({ch0_b, ch0_g}),
+    .fifo_level(bram_fifo_level),
+    .active(raw_serializer_active),
+    .overflow_sticky(bram_overflow_sticky),
+    .overflow_count(bram_overflow_count),
+    .input_frame_count(raw_input_frame_count),
+    .output_frame_count(raw_serialized_frame_count),
+    .output_line_count()
+);
+
+assign bram_stream_active = bram_display_valid;
+assign bram_underflow_sticky = bram_capture_error_sticky;
+assign bram_underflow_count = bram_dropped_frame_count;
+assign bram_input_frame_count = bram_captured_frame_count;
+assign bram_output_frame_count = bram_displayed_frame_count;
+assign bram_resync_count = bram_swap_count;
+
+assign ch0_r = 8'd0;
+assign ch1_r = 8'd0;
+assign ch1_g = 8'd0;
+assign ch1_b = 8'd0;
+assign ch1_vs = 1'b0;
+assign ch1_hs = 1'b0;
+assign ch1_de = 1'b0;
+
+// FPGA video does not own DDR AXI0 in BRAM mode. DDR remains available to
+// the Hard SoC through its dedicated fixed interface.
+assign axi0_ARADDR = 33'd0;
+assign axi0_ARAPCMD = 1'b0;
+assign axi0_ARBURST = 2'b01;
+assign axi0_ARID = 6'd0;
+assign axi0_ARLEN = 8'd0;
+assign axi0_ARLOCK = 1'b0;
+assign axi0_ARQOS = 1'b0;
+assign axi0_ARSIZE = 3'd6;
+assign axi0_ARVALID = 1'b0;
+assign axi0_AWADDR = 33'd0;
+assign axi0_AWALLSTRB = 1'b0;
+assign axi0_AWAPCMD = 1'b0;
+assign axi0_AWBURST = 2'b01;
+assign axi0_AWCACHE = 4'd0;
+assign axi0_AWCOBUF = 1'b0;
+assign axi0_AWID = 6'd0;
+assign axi0_AWLEN = 8'd0;
+assign axi0_AWLOCK = 1'b0;
+assign axi0_AWQOS = 1'b0;
+assign axi0_AWSIZE = 3'd6;
+assign axi0_AWVALID = 1'b0;
+assign axi0_BREADY = 1'b0;
+assign axi0_RREADY = 1'b0;
+assign axi0_WDATA = 512'd0;
+assign axi0_WLAST = 1'b0;
+assign axi0_WSTRB = 64'd0;
+assign axi0_WVALID = 1'b0;
 `endif 
 
 
@@ -1689,15 +1795,81 @@ wire o_hs;
 wire [15:0] h_cnt;
 wire [15:0] v_cnt;
 
-wire [2:0] diag_dsi_mode = 3'd0;
+reg [2:0] diag_dsi_mode = 3'd0;
+reg [2:0] diag_color_map_mode = 3'd1;
+wire [7:0] diag_uart1_rx_data;
+wire [7:0] diag_uart2_rx_data;
+wire diag_uart1_rx_valid;
+wire diag_uart2_rx_valid;
 
-wire diag_dsi_vs = (diag_dsi_mode == 3'd0) ? rgb_vs :
+diag_uart_rx_1m u_diag_uart1_rx (
+    .clk(i_sysclk_div2),
+    .rst_n(diag_uart_rst_n),
+    .rx(uart1_rxd),
+    .data(diag_uart1_rx_data),
+    .valid(diag_uart1_rx_valid)
+);
+
+diag_uart_rx_1m u_diag_uart2_rx (
+    .clk(i_sysclk_div2),
+    .rst_n(diag_uart_rst_n),
+    .rx(uart2_rxd),
+    .data(diag_uart2_rx_data),
+    .valid(diag_uart2_rx_valid)
+);
+
+wire diag_cmd_valid = diag_uart2_rx_valid | diag_uart1_rx_valid;
+wire [7:0] diag_cmd_data = diag_uart2_rx_valid ? diag_uart2_rx_data : diag_uart1_rx_data;
+
+always @(posedge i_sysclk_div2 or negedge diag_uart_rst_n) begin
+    if (!diag_uart_rst_n) begin
+        diag_dsi_mode <= 3'd0;
+        diag_color_map_mode <= 3'd1;
+    end else if (diag_cmd_valid) begin
+        case (diag_cmd_data)
+            "C", "c": diag_dsi_mode <= 3'd0;
+            "B", "b": diag_dsi_mode <= 3'd1;
+            "W", "w": diag_dsi_mode <= 3'd2;
+            "D", "d": diag_dsi_mode <= 3'd3;
+            "R", "r": diag_dsi_mode <= 3'd4;
+            "F", "f": diag_dsi_mode <= 3'd5;
+            "T", "t": diag_dsi_mode <= 3'd6;
+            "0": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd0;
+            end
+            "1": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd1;
+            end
+            "2": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd2;
+            end
+            "3": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd3;
+            end
+            "4": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd4;
+            end
+            "5": begin
+                diag_dsi_mode <= 3'd0;
+                diag_color_map_mode <= 3'd5;
+            end
+            default: diag_dsi_mode <= diag_dsi_mode;
+        endcase
+    end
+end
+
+wire diag_dsi_vs = ((diag_dsi_mode == 3'd0) || (diag_dsi_mode == 3'd6)) ? bram_display_vs :
                    (diag_dsi_mode == 3'd4) ? rx_out_vs :
                    (diag_dsi_mode == 3'd5) ? ch0_vs : o_vs;
-wire diag_dsi_hs = (diag_dsi_mode == 3'd0) ? rgb_hs :
+wire diag_dsi_hs = ((diag_dsi_mode == 3'd0) || (diag_dsi_mode == 3'd6)) ? bram_display_hs :
                    (diag_dsi_mode == 3'd4) ? rx_out_hs :
                    (diag_dsi_mode == 3'd5) ? ch0_hs : o_hs;
-wire diag_dsi_de = (diag_dsi_mode == 3'd0) ? rgb_de :
+wire diag_dsi_de = ((diag_dsi_mode == 3'd0) || (diag_dsi_mode == 3'd6)) ? bram_display_de :
                    (diag_dsi_mode == 3'd4) ? rx_out_de :
                    (diag_dsi_mode == 3'd5) ? ch0_de : o_de;
 wire [47:0] diag_dsi_white_data = 48'hffffff_ffffff;
@@ -1716,12 +1888,13 @@ reg [63:0] diag_dsi_data;
 
 always @(*) begin
     case (diag_dsi_mode)
-        3'd0: diag_dsi_data = {16'd0, cam0_dsi_rgb_datax2};
+        3'd0: diag_dsi_data = {16'd0, bram_display_rgb_datax2};
         3'd1: diag_dsi_data = {16'd0, dout};
         3'd2: diag_dsi_data = {16'd0, diag_dsi_white_data};
         3'd3: diag_dsi_data = {16'd0, diag_dsi_rgb_de_data};
         3'd4: diag_dsi_data = {16'd0, diag_rx_raw_view_data};
         3'd5: diag_dsi_data = {16'd0, diag_fb_raw_view_data};
+        3'd6: diag_dsi_data = {16'd0, bram_display_rgb_datax2};
         default: diag_dsi_data = {16'd0, dout};
     endcase
 end
@@ -1902,6 +2075,70 @@ dsi_tx_top # (
     .mipi_dp_data3_RST     (mipi_tx_dp13_RST)
   );
 
+wire bram_display_vs;
+wire bram_display_hs;
+wire bram_display_de;
+wire [47:0] bram_display_rgb_datax2;
+wire [47:0] diag_color_swap_rb = {
+    cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[47:40],
+    cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[23:16]
+};
+wire [47:0] diag_color_swap_rg = {
+    cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[47:40], cam0_dsi_rgb_datax2[31:24],
+    cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[23:16], cam0_dsi_rgb_datax2[7:0]
+};
+wire [47:0] diag_color_swap_gb = {
+    cam0_dsi_rgb_datax2[47:40], cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[39:32],
+    cam0_dsi_rgb_datax2[23:16], cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[15:8]
+};
+wire [47:0] diag_color_rgb_to_gbr = {
+    cam0_dsi_rgb_datax2[39:32], cam0_dsi_rgb_datax2[31:24], cam0_dsi_rgb_datax2[47:40],
+    cam0_dsi_rgb_datax2[15:8],  cam0_dsi_rgb_datax2[7:0],   cam0_dsi_rgb_datax2[23:16]
+};
+reg [47:0] diag_camera_rgb_datax2;
+
+always @(*) begin
+    case (diag_color_map_mode)
+        3'd0: diag_camera_rgb_datax2 = rgb_datax2;
+        3'd1: diag_camera_rgb_datax2 = cam0_dsi_rgb_datax2;
+        3'd2: diag_camera_rgb_datax2 = diag_color_swap_rb;
+        3'd3: diag_camera_rgb_datax2 = diag_color_swap_rg;
+        3'd4: diag_camera_rgb_datax2 = diag_color_swap_gb;
+        3'd5: diag_camera_rgb_datax2 = diag_color_rgb_to_gbr;
+        default: diag_camera_rgb_datax2 = cam0_dsi_rgb_datax2;
+    endcase
+end
+
+rgb565_bram_framebuffer #(
+    .SRC_WIDTH(960),
+    .SRC_HEIGHT(540)
+) u_rgb565_bram_framebuffer (
+    .clk(i_sysclk_div2),
+    .rst_n(pixel_data_en | pixel_data_en1),
+    .in_vs(rgb_vs),
+    .in_de(rgb_de),
+    .in_rgb2(diag_camera_rgb_datax2),
+    .test_pattern_enable(diag_dsi_mode == 3'd6),
+    .timing_vs(o_vs),
+    .timing_hs(o_hs),
+    .timing_de(o_de),
+    .out_vs(bram_display_vs),
+    .out_hs(bram_display_hs),
+    .out_de(bram_display_de),
+    .out_rgb2(bram_display_rgb_datax2),
+    .display_valid(bram_display_valid),
+    .pending_valid(bram_frame_pending),
+    .captured_frame_count(bram_captured_frame_count),
+    .displayed_frame_count(bram_displayed_frame_count),
+    .swap_count(bram_swap_count),
+    .dropped_frame_count(bram_dropped_frame_count),
+    .capture_error_sticky(bram_capture_error_sticky),
+    .measured_frame_lines(bram_measured_frame_lines),
+    .measured_line_de_min(bram_measured_line_de_min),
+    .measured_line_de_max(bram_measured_line_de_max),
+    .measured_frame_de_total(bram_measured_frame_de_total)
+);
+
 //=============================================================================
 // Diagnostic UART2 status stream
 //=============================================================================
@@ -2069,7 +2306,7 @@ function [7:0] dbg_hex_char;
   end
 endfunction
 
-localparam [7:0] DIAG_MSG_LEN = 8'd201;
+localparam [8:0] DIAG_MSG_LEN = 9'd280;
 localparam [6:0] DIAG_UART_CLKS_PER_BIT = 7'd70; // i_sysclk_div2 is 70 MHz, UART2 follows capture at 1 Mbps.
 localparam [1:0] DIAG_TX_IDLE  = 2'd0;
 localparam [1:0] DIAG_TX_START = 2'd1;
@@ -2077,7 +2314,7 @@ localparam [1:0] DIAG_TX_DATA  = 2'd2;
 localparam [1:0] DIAG_TX_STOP  = 2'd3;
 
 reg [26:0] diag_interval_cnt = 27'd0;
-reg [7:0] diag_msg_idx = 8'd0;
+reg [8:0] diag_msg_idx = 9'd0;
 reg [1:0] diag_tx_state = DIAG_TX_IDLE;
 reg [6:0] diag_tx_clk_cnt = 7'd0;
 reg [2:0] diag_tx_bit_idx = 3'd0;
@@ -2173,6 +2410,7 @@ always @(*) begin
             3'd3: diag_uart2_tx_data <= "D";
             3'd4: diag_uart2_tx_data <= "R";
             3'd5: diag_uart2_tx_data <= "F";
+            3'd6: diag_uart2_tx_data <= "T";
             default: diag_uart2_tx_data <= "?";
           endcase
         end
@@ -2270,32 +2508,111 @@ always @(*) begin
         8'd172: diag_uart2_tx_data <= dbg_hex_char(dbg_fb_data_sample[7:4]);
         8'd173: diag_uart2_tx_data <= dbg_hex_char(dbg_fb_data_sample[3:0]);
         8'd174: diag_uart2_tx_data <= " ";
-        8'd175: diag_uart2_tx_data <= "a";
-        8'd176: diag_uart2_tx_data <= "x";
-        8'd177: diag_uart2_tx_data <= "=";
-        8'd178: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_aw_seen);
-        8'd179: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_w_seen);
-        8'd180: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_b_seen);
-        8'd181: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_ar_seen);
-        8'd182: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_r_seen);
-        8'd183: diag_uart2_tx_data <= " ";
-        8'd184: diag_uart2_tx_data <= "e";
-        8'd185: diag_uart2_tx_data <= "r";
-        8'd186: diag_uart2_tx_data <= "=";
-        8'd187: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_bresp_error_seen);
-        8'd188: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_rresp_error_seen);
-        8'd189: diag_uart2_tx_data <= " ";
-        8'd190: diag_uart2_tx_data <= "r";
-        8'd191: diag_uart2_tx_data <= "n";
-        8'd192: diag_uart2_tx_data <= "=";
-        8'd193: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_rdata_nonzero_seen);
-        8'd194: diag_uart2_tx_data <= " ";
-        8'd195: diag_uart2_tx_data <= "r";
-        8'd196: diag_uart2_tx_data <= "r";
-        8'd197: diag_uart2_tx_data <= "=";
-        8'd198: diag_uart2_tx_data <= dbg_bit_char(riscv_reset_n);
-        8'd199: diag_uart2_tx_data <= 8'h0d;
-        8'd200: diag_uart2_tx_data <= 8'h0a;
+        8'd175: diag_uart2_tx_data <= "q";
+        8'd176: diag_uart2_tx_data <= "=";
+        8'd177: diag_uart2_tx_data <= dbg_hex_char(bram_fifo_level[13:12]);
+        8'd178: diag_uart2_tx_data <= dbg_hex_char(bram_fifo_level[11:8]);
+        8'd179: diag_uart2_tx_data <= dbg_hex_char(bram_fifo_level[7:4]);
+        8'd180: diag_uart2_tx_data <= dbg_hex_char(bram_fifo_level[3:0]);
+        8'd181: diag_uart2_tx_data <= " ";
+        8'd182: diag_uart2_tx_data <= "b";
+        8'd183: diag_uart2_tx_data <= "a";
+        8'd184: diag_uart2_tx_data <= "=";
+        8'd185: diag_uart2_tx_data <= dbg_bit_char(bram_stream_active);
+        8'd186: diag_uart2_tx_data <= " ";
+        8'd187: diag_uart2_tx_data <= "b";
+        8'd188: diag_uart2_tx_data <= "e";
+        8'd189: diag_uart2_tx_data <= "=";
+        8'd190: diag_uart2_tx_data <= dbg_bit_char(bram_overflow_sticky);
+        8'd191: diag_uart2_tx_data <= dbg_bit_char(bram_underflow_sticky);
+        8'd192: diag_uart2_tx_data <= " ";
+        8'd193: diag_uart2_tx_data <= "o";
+        8'd194: diag_uart2_tx_data <= "c";
+        8'd195: diag_uart2_tx_data <= "=";
+        8'd196: diag_uart2_tx_data <= dbg_hex_char(bram_overflow_count[15:12]);
+        8'd197: diag_uart2_tx_data <= dbg_hex_char(bram_overflow_count[11:8]);
+        8'd198: diag_uart2_tx_data <= dbg_hex_char(bram_overflow_count[7:4]);
+        8'd199: diag_uart2_tx_data <= dbg_hex_char(bram_overflow_count[3:0]);
+        8'd200: diag_uart2_tx_data <= " ";
+        8'd201: diag_uart2_tx_data <= "u";
+        8'd202: diag_uart2_tx_data <= "c";
+        8'd203: diag_uart2_tx_data <= "=";
+        8'd204: diag_uart2_tx_data <= dbg_hex_char(bram_underflow_count[15:12]);
+        8'd205: diag_uart2_tx_data <= dbg_hex_char(bram_underflow_count[11:8]);
+        8'd206: diag_uart2_tx_data <= dbg_hex_char(bram_underflow_count[7:4]);
+        8'd207: diag_uart2_tx_data <= dbg_hex_char(bram_underflow_count[3:0]);
+        8'd208: diag_uart2_tx_data <= " ";
+        8'd209: diag_uart2_tx_data <= "r";
+        8'd210: diag_uart2_tx_data <= "c";
+        8'd211: diag_uart2_tx_data <= "=";
+        8'd212: diag_uart2_tx_data <= dbg_hex_char(bram_resync_count[15:12]);
+        8'd213: diag_uart2_tx_data <= dbg_hex_char(bram_resync_count[11:8]);
+        8'd214: diag_uart2_tx_data <= dbg_hex_char(bram_resync_count[7:4]);
+        8'd215: diag_uart2_tx_data <= dbg_hex_char(bram_resync_count[3:0]);
+        8'd216: diag_uart2_tx_data <= " ";
+        8'd217: diag_uart2_tx_data <= "f";
+        8'd218: diag_uart2_tx_data <= "i";
+        8'd219: diag_uart2_tx_data <= "=";
+        8'd220: diag_uart2_tx_data <= dbg_hex_char(bram_input_frame_count[15:12]);
+        8'd221: diag_uart2_tx_data <= dbg_hex_char(bram_input_frame_count[11:8]);
+        8'd222: diag_uart2_tx_data <= dbg_hex_char(bram_input_frame_count[7:4]);
+        8'd223: diag_uart2_tx_data <= dbg_hex_char(bram_input_frame_count[3:0]);
+        8'd224: diag_uart2_tx_data <= " ";
+        8'd225: diag_uart2_tx_data <= "f";
+        8'd226: diag_uart2_tx_data <= "o";
+        8'd227: diag_uart2_tx_data <= "=";
+        8'd228: diag_uart2_tx_data <= dbg_hex_char(bram_output_frame_count[15:12]);
+        8'd229: diag_uart2_tx_data <= dbg_hex_char(bram_output_frame_count[11:8]);
+        8'd230: diag_uart2_tx_data <= dbg_hex_char(bram_output_frame_count[7:4]);
+        8'd231: diag_uart2_tx_data <= dbg_hex_char(bram_output_frame_count[3:0]);
+        8'd232: diag_uart2_tx_data <= " ";
+        8'd233: diag_uart2_tx_data <= "a";
+        8'd234: diag_uart2_tx_data <= "x";
+        8'd235: diag_uart2_tx_data <= "=";
+        8'd236: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_aw_seen);
+        8'd237: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_w_seen);
+        8'd238: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_b_seen);
+        8'd239: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_ar_seen);
+        8'd240: diag_uart2_tx_data <= dbg_bit_char(dbg_axi_r_seen);
+        8'd241: diag_uart2_tx_data <= " ";
+        8'd242: diag_uart2_tx_data <= "r";
+        8'd243: diag_uart2_tx_data <= "r";
+        8'd244: diag_uart2_tx_data <= "=";
+        8'd245: diag_uart2_tx_data <= dbg_bit_char(riscv_reset_n);
+        9'd246: diag_uart2_tx_data <= " ";
+        9'd247: diag_uart2_tx_data <= "g";
+        9'd248: diag_uart2_tx_data <= "m";
+        9'd249: diag_uart2_tx_data <= "=";
+        9'd250: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_lines[15:12]);
+        9'd251: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_lines[11:8]);
+        9'd252: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_lines[7:4]);
+        9'd253: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_lines[3:0]);
+        9'd254: diag_uart2_tx_data <= "/";
+        9'd255: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_min[15:12]);
+        9'd256: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_min[11:8]);
+        9'd257: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_min[7:4]);
+        9'd258: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_min[3:0]);
+        9'd259: diag_uart2_tx_data <= "/";
+        9'd260: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_max[15:12]);
+        9'd261: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_max[11:8]);
+        9'd262: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_max[7:4]);
+        9'd263: diag_uart2_tx_data <= dbg_hex_char(bram_measured_line_de_max[3:0]);
+        9'd264: diag_uart2_tx_data <= "/";
+        9'd265: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[19:16]);
+        9'd266: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[15:12]);
+        9'd267: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[11:8]);
+        9'd268: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[7:4]);
+        9'd269: diag_uart2_tx_data <= dbg_hex_char(bram_measured_frame_de_total[3:0]);
+        9'd270: diag_uart2_tx_data <= " ";
+        9'd271: diag_uart2_tx_data <= "c";
+        9'd272: diag_uart2_tx_data <= "m";
+        9'd273: diag_uart2_tx_data <= "=";
+        9'd274: diag_uart2_tx_data <= dbg_hex_char({1'b0, diag_color_map_mode});
+        9'd275: diag_uart2_tx_data <= " ";
+        9'd276: diag_uart2_tx_data <= "v";
+        9'd277: diag_uart2_tx_data <= "B";
+        9'd278: diag_uart2_tx_data <= 8'h0d;
+        9'd279: diag_uart2_tx_data <= 8'h0a;
         default: diag_uart2_tx_data <= 8'h0a;
   endcase
 end
@@ -2303,7 +2620,7 @@ end
 always @(posedge i_sysclk_div2 or negedge i_sw[0]) begin
   if (!i_sw[0]) begin
     diag_interval_cnt <= 27'd0;
-    diag_msg_idx <= 8'd0;
+    diag_msg_idx <= 9'd0;
     diag_uart2_tx_start <= 1'b0;
     diag_tx_state <= DIAG_TX_IDLE;
     diag_tx_clk_cnt <= 7'd0;
@@ -2321,7 +2638,7 @@ always @(posedge i_sysclk_div2 or negedge i_sw[0]) begin
 
         if (diag_interval_cnt < 27'd70000000) begin
           diag_interval_cnt <= diag_interval_cnt + 1'b1;
-          diag_msg_idx <= 8'd0;
+          diag_msg_idx <= 9'd0;
         end else begin
           diag_tx_byte <= diag_uart2_tx_data;
           diag_uart2_tx_start <= 1'b1;
@@ -2359,7 +2676,7 @@ always @(posedge i_sysclk_div2 or negedge i_sw[0]) begin
         if (diag_tx_clk_cnt == DIAG_UART_CLKS_PER_BIT - 1'b1) begin
           diag_tx_clk_cnt <= 7'd0;
           if (diag_msg_idx == DIAG_MSG_LEN - 1'b1) begin
-            diag_msg_idx <= 8'd0;
+            diag_msg_idx <= 9'd0;
             diag_interval_cnt <= 27'd0;
           end else begin
             diag_msg_idx <= diag_msg_idx + 1'b1;
@@ -2377,4 +2694,94 @@ always @(posedge i_sysclk_div2 or negedge i_sw[0]) begin
     endcase
   end
 end
+endmodule
+
+// Robust 1 Mbps, 8-N-1 receiver for the 70 MHz diagnostic clock domain.
+// Both physical debug UART RX pins use this receiver so the active connector
+// can be selected without rebuilding the bitstream.
+module diag_uart_rx_1m (
+    input  wire       clk,
+    input  wire       rst_n,
+    input  wire       rx,
+    output reg  [7:0] data = 8'd0,
+    output reg        valid = 1'b0
+);
+
+localparam CLKS_PER_BIT = 70;
+localparam HALF_BIT = 35;
+localparam RX_IDLE  = 2'd0;
+localparam RX_START = 2'd1;
+localparam RX_DATA  = 2'd2;
+localparam RX_STOP  = 2'd3;
+
+reg [1:0] state = RX_IDLE;
+reg [6:0] clk_count = 7'd0;
+reg [2:0] bit_index = 3'd0;
+reg [7:0] shift_data = 8'd0;
+reg [2:0] rx_sync = 3'b111;
+wire rx_sample = rx_sync[2];
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state <= RX_IDLE;
+        clk_count <= 7'd0;
+        bit_index <= 3'd0;
+        shift_data <= 8'd0;
+        data <= 8'd0;
+        valid <= 1'b0;
+        rx_sync <= 3'b111;
+    end else begin
+        rx_sync <= {rx_sync[1:0], rx};
+        valid <= 1'b0;
+
+        case (state)
+            RX_IDLE: begin
+                clk_count <= 7'd0;
+                bit_index <= 3'd0;
+                if (!rx_sample)
+                    state <= RX_START;
+            end
+
+            RX_START: begin
+                if (clk_count == HALF_BIT - 1) begin
+                    clk_count <= 7'd0;
+                    state <= rx_sample ? RX_IDLE : RX_DATA;
+                end else begin
+                    clk_count <= clk_count + 1'b1;
+                end
+            end
+
+            RX_DATA: begin
+                if (clk_count == CLKS_PER_BIT - 1) begin
+                    clk_count <= 7'd0;
+                    shift_data[bit_index] <= rx_sample;
+                    if (bit_index == 3'd7) begin
+                        bit_index <= 3'd0;
+                        state <= RX_STOP;
+                    end else begin
+                        bit_index <= bit_index + 1'b1;
+                    end
+                end else begin
+                    clk_count <= clk_count + 1'b1;
+                end
+            end
+
+            RX_STOP: begin
+                if (clk_count == CLKS_PER_BIT - 1) begin
+                    clk_count <= 7'd0;
+                    if (rx_sample) begin
+                        data <= shift_data;
+                        valid <= 1'b1;
+                    end
+                    state <= RX_IDLE;
+                end else begin
+                    clk_count <= clk_count + 1'b1;
+                end
+            end
+
+            default: state <= RX_IDLE;
+        endcase
+    end
+end
+
 endmodule

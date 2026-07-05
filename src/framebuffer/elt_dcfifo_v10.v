@@ -331,7 +331,7 @@ module generic_mem_dc #(
 );
 
     localparam DEPTH = 1 << ADDR_WIDTH;
-    reg [WIDTH-1:0] mem[0:DEPTH-1];
+    (* syn_ramstyle = "block_ram" *) reg [WIDTH-1:0] mem[0:DEPTH-1];
 
     reg [WIDTH-1:0] dout_r;
     always @(posedge wclk ) begin
