@@ -263,6 +263,60 @@ Current stage-isolation meanings:
   channels. There are no runtime color-map, channel-swap, enhancement-toggle,
   or center-pixel sampling controls. System-health UART diagnostics and the
   BRAM/DSI isolation modes remain available for maintenance.
+
+## RISC-V Small-Frame APB Window
+
+The hardened RISC-V reaches the FPGA small-frame buffer through APB3 Slave 0
+at CPU address `0xE8100000`. The window is 64 KB, 32-bit, and clocked by
+`io_peripheralClk`. It does not use either side's DDR interface.
+
+The camera tap observes the fixed enhanced RGB stream without backpressure.
+It selects one pixel from every six two-pixel words and one line from every
+twelve input lines, producing `160x90 RGB565`. Two complete frames fit in the
+64 KB APB window:
+
+| Offset | CPU address | Description |
+| --- | --- | --- |
+| `0x0000` | `0xE8100000` | Magic `0x5649534E` (`VISN`) |
+| `0x0004` | `0xE8100004` | Interface version `0x00010000` |
+| `0x0008` | `0xE8100008` | `{height,width}` = `0x005A00A0` |
+| `0x000C` | `0xE810000C` | Format `1`: RGB565, two pixels/word |
+| `0x0010` | `0xE8100010` | Latest complete frame sequence |
+| `0x0014` | `0xE8100014` | Latest complete bank index |
+| `0x0018` | `0xE8100018` | Status: ready, valid, claimed, capture error |
+| `0x001C` | `0xE810001C` | Buffer 0 offset `0x1000` |
+| `0x0020` | `0xE8100020` | Buffer 1 offset `0x8100` |
+| `0x0024` | `0xE8100024` | Bytes per frame `0x7080` |
+| `0x0028` | `0xE8100028` | Dropped-frame count |
+| `0x002C` | `0xE810002C` | Completed-frame count |
+| `0x0030` | `0xE8100030` | Control: bit 0 claim, bit 1 release |
+| `0x0034` | `0xE8100034` | Claimed bank index |
+| `0x0038` | `0xE8100038` | Claimed frame sequence |
+| `0x1000` | `0xE8101000` | Buffer 0, 28,800 bytes |
+| `0x8100` | `0xE8108100` | Buffer 1, 28,800 bytes |
+
+Software must claim before reading a frame and release afterward. While a bank
+is claimed, the FPGA never overwrites it; if necessary, the small-image tap
+drops new frames. This cannot stall or reset the main display path.
+
+The OCR-only validation firmware is located at
+`embedded_sw/efx_hard_soc/software/standalone/application/smallFrameApbTest/`.
+It verifies the magic and dimensions, claims each new frame, reads all 7,200
+32-bit words, prints the first word, last word, rolling checksum, and drop
+count over RISC-V UART0, then releases the bank. It uses 3,104 bytes of the
+16 KB OCR and does not access DDR.
+
+First hardware validation after generating a bitstream:
+
+1. Program only through JTAG and confirm the live MIPI display is unchanged.
+2. Connect OpenOCD with TAP ID `0x006A0EF3` and BSCAN tunnel IR `8`.
+3. Read `0xE8100000`; it must return `0x5649534E`.
+4. Read sequence, status, dimensions, buffer offsets, and several buffer words.
+5. Confirm sequence and pixel data change when the camera scene changes.
+6. Test APB claim/release and confirm the claimed frame remains stable.
+7. Load `smallFrameApbTest.elf` into OCR and monitor UART0 at 115200 8N1.
+8. Confirm the display remains stable throughout all RISC-V reads.
+
 - `R` and `F` do not use panel-compatible frame timing. A black result in these
   modes does not prove CSI or RAW serialization has failed; rely on their UART
   activity fields for those stages.
@@ -281,8 +335,9 @@ Expected first BRAM-path hardware test:
 4. Stable operation has `be=00`, `oc=uc=0000`, and `rc` increasing near 30/s.
 5. `fi` should increase near 30/s and `fo` near 59/s.
 
-This BRAM path is not yet hardware-verified. The previous committed revision
-`8a6b93a` is the reproducible DDR-conflict baseline.
+The 960x540 BRAM display path and hardened RISC-V JTAG/OCR operation are
+hardware-verified together. The new 160x90 APB small-frame window is the only
+unverified hardware stage in the current working tree.
 
 ## Next Modification Direction
 

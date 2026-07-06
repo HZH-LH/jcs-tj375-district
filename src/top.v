@@ -902,10 +902,6 @@ wire [31:0] riscv_apb_pwdata;
 wire        riscv_apb_pwrite;
 wire [31:0] riscv_apb_prdata;
 
-assign riscv_apb_pready    = 1'b1;
-assign riscv_apb_prdata    = 32'd0;
-assign riscv_apb_pslverror = 1'b0;
-
 (* syn_preserve = "true" *) EfxSapphireHpSoc_slb u_riscv_sapphire_soc (
     .io_peripheralClk        (io_peripheralClk),
     .io_peripheralReset      (io_peripheralReset),
@@ -2084,6 +2080,26 @@ rgb565_bram_framebuffer #(
     .measured_line_de_min(bram_measured_line_de_min),
     .measured_line_de_max(bram_measured_line_de_max),
     .measured_frame_de_total(bram_measured_frame_de_total)
+);
+
+// Independent 160x90 RGB565 tap for the hardened RISC-V. This path never
+// applies backpressure to the display stream and does not access external DDR.
+vision_small_frame_apb u_vision_small_frame_apb (
+    .video_clk(i_sysclk_div2),
+    .video_rst_n(pixel_data_en | pixel_data_en1),
+    .video_vs(rgb_vs),
+    .video_de(rgb_de),
+    .video_rgb2(cam0_dsi_rgb_datax2),
+    .apb_clk(io_peripheralClk),
+    .apb_reset(io_peripheralReset),
+    .apb_paddr(riscv_apb_paddr),
+    .apb_psel(riscv_apb_psel),
+    .apb_penable(riscv_apb_penable),
+    .apb_pwrite(riscv_apb_pwrite),
+    .apb_pwdata(riscv_apb_pwdata),
+    .apb_prdata(riscv_apb_prdata),
+    .apb_pready(riscv_apb_pready),
+    .apb_pslverror(riscv_apb_pslverror)
 );
 
 //=============================================================================
