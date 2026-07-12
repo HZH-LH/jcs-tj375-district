@@ -1,6 +1,6 @@
 # Efinity Interface Configuration
 # Version: 2025.2.288.3.8
-# Date: 2026-07-04 20:12
+# Date: 2026-07-07 16:01
 #
 # Copyright (C) 2013 - 2025 Efinix Inc. All rights reserved.
 #
@@ -253,12 +253,12 @@ design.set_property("qcrv32_inst1","JTAGCTRL_TDO_PIN","jtagCtrl_tdo","SOC")
 design.set_property("qcrv32_inst1","JTAGCTRL_UPDATE_PIN","jtagCtrl_update","SOC")
 design.set_property("qcrv32_inst1","JTAG_TYPE","FPGA","SOC")
 design.set_property("qcrv32_inst1","MEM_CLK_SOURCE","Clock 0","SOC")
-design.set_property("qcrv32_inst1","OCR_FILE_PATH","embedded_sw/efx_hard_soc/software/standalone/uart/ocrUartHeartbeat/build/ocrUartHeartbeat.hex","SOC")
+design.set_property("qcrv32_inst1","OCR_FILE_PATH","embedded_sw/efx_hard_soc/software/standalone/application/smallFrameApbTest/build/smallFrameApbTest.hex","SOC")
 design.set_property("qcrv32_inst1","PIPELINE_SOC_AXI_MEM_INTERFACE_EN","0","SOC")
 design.set_property("qcrv32_inst1","SYS_CLK_SOURCE","Clock 0","SOC")
 design.set_property("qcrv32_inst1","USERINTERRUPTA_PIN","userInterruptA","SOC")
 design.set_property("qcrv32_inst1","USERINTERRUPTB_PIN","userInterruptB","SOC")
-design.set_property("qcrv32_inst1","USERINTERRUPTC_PIN","","SOC")
+design.set_property("qcrv32_inst1","USERINTERRUPTC_PIN","userInterruptC","SOC")
 design.set_property("qcrv32_inst1","USERINTERRUPTD_PIN","","SOC")
 design.set_property("qcrv32_inst1","USERINTERRUPTE_PIN","","SOC")
 design.set_property("qcrv32_inst1","USERINTERRUPTF_PIN","","SOC")

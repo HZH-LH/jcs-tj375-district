@@ -1,5 +1,7 @@
 PROJ_NAME=smallFrameApbTest
 
+SHELL ?= D:/Efinity/efinity-riscv-ide-2025.2/build_tools/bin/sh.exe
+
 STANDALONE=../..
 BSP ?= efinix/EfxSapphireSoc
 

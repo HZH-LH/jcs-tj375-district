@@ -8,6 +8,8 @@ module vision_small_frame_apb #(
     parameter INPUT_LINES = 1080,
     parameter OUTPUT_WIDTH = 160,
     parameter OUTPUT_HEIGHT = 90,
+    parameter H_STEP = 12,
+    parameter V_STEP = 12,
     parameter FRAME_PIXELS = OUTPUT_WIDTH * OUTPUT_HEIGHT,
     parameter FRAME_WORDS = FRAME_PIXELS / 2
 ) (
@@ -15,7 +17,8 @@ module vision_small_frame_apb #(
     input  wire        video_rst_n,
     input  wire        video_vs,
     input  wire        video_de,
-    input  wire [47:0] video_rgb2,
+    input  wire        video_valid,
+    input  wire [47:0] video_grb2,
 
     input  wire        apb_clk,
     input  wire        apb_reset,
@@ -49,18 +52,16 @@ localparam [15:0] BUFFER0_OFFSET = 16'h1000;
 localparam [15:0] BUFFER1_OFFSET = 16'h8100;
 localparam [15:0] BUFFER_BYTES = 16'h7080;
 
-wire [7:0] pixel0_r = video_rgb2[23:16];
-wire [7:0] pixel0_g = video_rgb2[15:8];
-wire [7:0] pixel0_b = video_rgb2[7:0];
-wire [15:0] sampled_rgb565 = {
-    pixel0_r[7:3], pixel0_g[7:2], pixel0_b[7:3]
-};
+wire [7:0] pix0_g = video_grb2[23:16];
+wire [7:0] pix0_r = video_grb2[15:8];
+wire [7:0] pix0_b = video_grb2[7:0];
+wire [15:0] pix0_rgb565 = {pix0_r[7:3], pix0_g[7:2], pix0_b[7:3]};
 
 reg video_vs_d = 1'b0;
-reg [10:0] input_x = 11'd0;
-reg [10:0] input_y = 11'd0;
-reg [2:0] x_div6 = 3'd0;
-reg [3:0] y_div12 = 4'd0;
+reg video_de_d = 1'b0;
+reg [5:0] h_phase = 6'd0;
+reg [5:0] v_phase = 6'd0;
+reg [7:0] sample_col = 8'd0;
 reg capture_active = 1'b0;
 reg write_bank = 1'b0;
 reg half_pending = 1'b0;
@@ -84,13 +85,17 @@ reg hold_bank_apb = 1'b0;
 reg [31:0] hold_seq_apb = 32'd0;
 
 wire video_vs_rise = video_vs & ~video_vs_d;
+wire video_de_rise = video_de & ~video_de_d;
+wire video_de_fall = ~video_de & video_de_d;
 wire frame_complete = (sampled_pixel_count == FRAME_PIXELS) && !half_pending;
 wire next_write_bank = frame_complete ? ~write_bank : write_bank;
 wire next_bank_blocked = hold_active_video && (hold_bank_video == next_write_bank);
-wire take_sample = capture_active && video_de &&
-                   (x_div6 == 3'd0) && (y_div12 == 4'd0);
+wire take_sample = capture_active && video_valid && video_de &&
+                   (h_phase == 6'd0) && (v_phase == 6'd0) &&
+                   (sample_col < OUTPUT_WIDTH) &&
+                   (sampled_pixel_count < FRAME_PIXELS);
 wire frame_word_write = take_sample && half_pending;
-wire [31:0] frame_word_data = {sampled_rgb565, low_pixel};
+wire [31:0] frame_word_data = {pix0_rgb565, low_pixel};
 wire [31:0] apb_bank0_read_data;
 wire [31:0] apb_bank1_read_data;
 wire apb_bank0_read;
@@ -137,10 +142,10 @@ end
 always @(posedge video_clk or negedge video_rst_n) begin
     if (!video_rst_n) begin
         video_vs_d <= 1'b0;
-        input_x <= 11'd0;
-        input_y <= 11'd0;
-        x_div6 <= 3'd0;
-        y_div12 <= 4'd0;
+        video_de_d <= 1'b0;
+        h_phase <= 6'd0;
+        v_phase <= 6'd0;
+        sample_col <= 8'd0;
         capture_active <= 1'b0;
         write_bank <= 1'b0;
         half_pending <= 1'b0;
@@ -156,6 +161,7 @@ always @(posedge video_clk or negedge video_rst_n) begin
         publish_toggle <= 1'b0;
     end else begin
         video_vs_d <= video_vs;
+        video_de_d <= video_de;
 
         if (video_vs_rise) begin
             if (capture_active) begin
@@ -176,40 +182,41 @@ always @(posedge video_clk or negedge video_rst_n) begin
             if (next_bank_blocked)
                 dropped_frame_count <= dropped_frame_count + 1'b1;
 
-            input_x <= 11'd0;
-            input_y <= 11'd0;
-            x_div6 <= 3'd0;
-            y_div12 <= 4'd0;
+            h_phase <= 6'd0;
+            v_phase <= 6'd0;
+            sample_col <= 8'd0;
             half_pending <= 1'b0;
             sampled_pixel_count <= 14'd0;
             write_word_addr <= 13'd0;
         end else if (video_de) begin
+            if (video_de_rise) begin
+                h_phase <= 6'd0;
+                sample_col <= 8'd0;
+            end else if (video_valid) begin
+                if (h_phase == H_STEP - 2)
+                    h_phase <= 6'd0;
+                else
+                    h_phase <= h_phase + 6'd2;
+            end
+
             if (take_sample) begin
                 sampled_pixel_count <= sampled_pixel_count + 1'b1;
+                sample_col <= sample_col + 1'b1;
                 if (!half_pending) begin
-                    low_pixel <= sampled_rgb565;
+                    low_pixel <= pix0_rgb565;
                     half_pending <= 1'b1;
                 end else begin
                     write_word_addr <= write_word_addr + 1'b1;
                     half_pending <= 1'b0;
                 end
             end
+        end
 
-            if (input_x == INPUT_WORDS_PER_LINE - 1) begin
-                input_x <= 11'd0;
-                x_div6 <= 3'd0;
-                input_y <= input_y + 1'b1;
-                if (y_div12 == 4'd11)
-                    y_div12 <= 4'd0;
-                else
-                    y_div12 <= y_div12 + 1'b1;
-            end else begin
-                input_x <= input_x + 1'b1;
-                if (x_div6 == 3'd5)
-                    x_div6 <= 3'd0;
-                else
-                    x_div6 <= x_div6 + 1'b1;
-            end
+        if (video_de_fall) begin
+            if (v_phase == V_STEP - 1)
+                v_phase <= 6'd0;
+            else
+                v_phase <= v_phase + 1'b1;
         end
     end
 end

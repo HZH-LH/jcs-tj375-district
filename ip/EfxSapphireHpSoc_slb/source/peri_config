@@ -1,5 +1,6 @@
---uart name=system_uart_0_io,address=0x10000,interruptId=0
---apbSlave name=io_apbSlave_0,address=0x100000,size=65536
---PeripheralClock true
 --spi name=system_spi_0_io,address=0x30000,interruptId=3,width=8,ssCount=4
+--PeripheralClock true
+--apbSlave name=io_apbSlave_0,address=0x100000,size=65536
+--uart name=system_uart_1_io,address=0x11000,interruptId=1
+--uart name=system_uart_0_io,address=0x10000,interruptId=0
 --peripheralFrequency 250000000

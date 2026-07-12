@@ -1,68 +1,4 @@
 module EfxSapphireHpSoc_wrapper (
-input		cpu1_customInstruction_cmd_valid,
-output		cpu1_customInstruction_cmd_ready,
-input [9:0] cpu1_customInstruction_function_id,
-input [31:0] cpu1_customInstruction_inputs_0,
-input [31:0] cpu1_customInstruction_inputs_1,
-output		cpu1_customInstruction_rsp_valid,
-input		cpu1_customInstruction_rsp_ready,
-output [31:0] cpu1_customInstruction_outputs_0,
-input		io_cfuClk,
-input		io_cfuReset,
-output		system_spi_0_io_sclk_write,
-output		system_spi_0_io_data_0_writeEnable,
-input		system_spi_0_io_data_0_read,
-output		system_spi_0_io_data_0_write,
-output		system_spi_0_io_data_1_writeEnable,
-input		system_spi_0_io_data_1_read,
-output		system_spi_0_io_data_1_write,
-output		system_spi_0_io_data_2_writeEnable,
-input		system_spi_0_io_data_2_read,
-output		system_spi_0_io_data_2_write,
-output		system_spi_0_io_data_3_writeEnable,
-input		system_spi_0_io_data_3_read,
-output		system_spi_0_io_data_3_write,
-output [3:0] system_spi_0_io_ss,
-output		userInterruptA,
-input		cpu2_customInstruction_cmd_valid,
-output		cpu2_customInstruction_cmd_ready,
-input [9:0] cpu2_customInstruction_function_id,
-input [31:0] cpu2_customInstruction_inputs_0,
-input [31:0] cpu2_customInstruction_inputs_1,
-output		cpu2_customInstruction_rsp_valid,
-input		cpu2_customInstruction_rsp_ready,
-output [31:0] cpu2_customInstruction_outputs_0,
-output		jtagCtrl_tdi,
-input		jtagCtrl_tdo,
-output		jtagCtrl_enable,
-output		jtagCtrl_capture,
-output		jtagCtrl_shift,
-output		jtagCtrl_update,
-output		jtagCtrl_reset,
-input		ut_jtagCtrl_tdi,
-output		ut_jtagCtrl_tdo,
-input		ut_jtagCtrl_enable,
-input		ut_jtagCtrl_capture,
-input		ut_jtagCtrl_shift,
-input		ut_jtagCtrl_update,
-input		ut_jtagCtrl_reset,
-input		cpu3_customInstruction_cmd_valid,
-output		cpu3_customInstruction_cmd_ready,
-input [9:0] cpu3_customInstruction_function_id,
-input [31:0] cpu3_customInstruction_inputs_0,
-input [31:0] cpu3_customInstruction_inputs_1,
-output		cpu3_customInstruction_rsp_valid,
-input		cpu3_customInstruction_rsp_ready,
-output [31:0] cpu3_customInstruction_outputs_0,
-output		userInterruptB,
-input		cpu0_customInstruction_cmd_valid,
-output		cpu0_customInstruction_cmd_ready,
-input [9:0] cpu0_customInstruction_function_id,
-input [31:0] cpu0_customInstruction_inputs_0,
-input [31:0] cpu0_customInstruction_inputs_1,
-output		cpu0_customInstruction_rsp_valid,
-input		cpu0_customInstruction_rsp_ready,
-output [31:0] cpu0_customInstruction_outputs_0,
 output		io_ddrMasters_0_aw_valid,
 input		io_ddrMasters_0_aw_ready,
 output [31:0] io_ddrMasters_0_aw_payload_addr,
@@ -105,8 +41,75 @@ input [1:0] io_ddrMasters_0_r_payload_resp,
 input		io_ddrMasters_0_r_payload_last,
 input		io_ddrMasters_0_clk,
 input		io_ddrMasters_0_reset,
+input		cpu3_customInstruction_cmd_valid,
+output		cpu3_customInstruction_cmd_ready,
+input [9:0] cpu3_customInstruction_function_id,
+input [31:0] cpu3_customInstruction_inputs_0,
+input [31:0] cpu3_customInstruction_inputs_1,
+output		cpu3_customInstruction_rsp_valid,
+input		cpu3_customInstruction_rsp_ready,
+output [31:0] cpu3_customInstruction_outputs_0,
+input		io_cfuClk,
+input		io_cfuReset,
+output		userInterruptA,
+output		userInterruptC,
+output		userInterruptB,
+output		jtagCtrl_tdi,
+input		jtagCtrl_tdo,
+output		jtagCtrl_enable,
+output		jtagCtrl_capture,
+output		jtagCtrl_shift,
+output		jtagCtrl_update,
+output		jtagCtrl_reset,
+input		ut_jtagCtrl_tdi,
+output		ut_jtagCtrl_tdo,
+input		ut_jtagCtrl_enable,
+input		ut_jtagCtrl_capture,
+input		ut_jtagCtrl_shift,
+input		ut_jtagCtrl_update,
+input		ut_jtagCtrl_reset,
+output		system_spi_0_io_sclk_write,
+output		system_spi_0_io_data_0_writeEnable,
+input		system_spi_0_io_data_0_read,
+output		system_spi_0_io_data_0_write,
+output		system_spi_0_io_data_1_writeEnable,
+input		system_spi_0_io_data_1_read,
+output		system_spi_0_io_data_1_write,
+output		system_spi_0_io_data_2_writeEnable,
+input		system_spi_0_io_data_2_read,
+output		system_spi_0_io_data_2_write,
+output		system_spi_0_io_data_3_writeEnable,
+input		system_spi_0_io_data_3_read,
+output		system_spi_0_io_data_3_write,
+output [3:0] system_spi_0_io_ss,
+input		cpu0_customInstruction_cmd_valid,
+output		cpu0_customInstruction_cmd_ready,
+input [9:0] cpu0_customInstruction_function_id,
+input [31:0] cpu0_customInstruction_inputs_0,
+input [31:0] cpu0_customInstruction_inputs_1,
+output		cpu0_customInstruction_rsp_valid,
+input		cpu0_customInstruction_rsp_ready,
+output [31:0] cpu0_customInstruction_outputs_0,
+input		cpu2_customInstruction_cmd_valid,
+output		cpu2_customInstruction_cmd_ready,
+input [9:0] cpu2_customInstruction_function_id,
+input [31:0] cpu2_customInstruction_inputs_0,
+input [31:0] cpu2_customInstruction_inputs_1,
+output		cpu2_customInstruction_rsp_valid,
+input		cpu2_customInstruction_rsp_ready,
+output [31:0] cpu2_customInstruction_outputs_0,
 output		system_uart_0_io_txd,
 input		system_uart_0_io_rxd,
+input		cpu1_customInstruction_cmd_valid,
+output		cpu1_customInstruction_cmd_ready,
+input [9:0] cpu1_customInstruction_function_id,
+input [31:0] cpu1_customInstruction_inputs_0,
+input [31:0] cpu1_customInstruction_inputs_1,
+output		cpu1_customInstruction_rsp_valid,
+input		cpu1_customInstruction_rsp_ready,
+output [31:0] cpu1_customInstruction_outputs_0,
+output		system_uart_1_io_txd,
+input		system_uart_1_io_rxd,
 input [31:0]  axiA_awaddr,
 input [7:0]	  axiA_awlen,
 input [2:0]	  axiA_awsize,
@@ -170,6 +173,78 @@ wire		io_apbSlave_0_PSLVERROR;
 /*	INFO: USER TO MODIFY CODES BELOW						*/
 /*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
 /**/
+assign cpu2_customInstruction_cmd_ready = 1'b1;
+assign cpu2_customInstruction_rsp_valid = 1'b0;
+assign cpu2_customInstruction_outputs_0 = 32'd0;
+//io_cfuClk
+//io_cfyReset
+//cpu2_customInstruction_rsp_ready
+//cpu2_customInstruction_cmd_valid
+//cpu2_customInstruction_function_id
+//cpu2_customInstruction_inputs_0
+//cpu2_customInstruction_inputs_1
+
+/**/
+/*	INFO: USER TO MODIFY CODES BELOW						*/
+/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
+/**/
+assign cpu3_customInstruction_cmd_ready = 1'b1;
+assign cpu3_customInstruction_rsp_valid = 1'b0;
+assign cpu3_customInstruction_outputs_0 = 32'd0;
+//io_cfuClk
+//io_cfyReset
+//cpu3_customInstruction_rsp_ready
+//cpu3_customInstruction_cmd_valid
+//cpu3_customInstruction_function_id
+//cpu3_customInstruction_inputs_0
+//cpu3_customInstruction_inputs_1
+
+/**/
+/*	INFO: USER TO MODIFY CODES BELOW						*/
+/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
+/**/
+assign cpu0_customInstruction_cmd_ready = 1'b1;
+assign cpu0_customInstruction_rsp_valid = 1'b0;
+assign cpu0_customInstruction_outputs_0 = 32'd0;
+//io_cfuClk
+//io_cfyReset
+//cpu0_customInstruction_rsp_ready
+//cpu0_customInstruction_cmd_valid
+//cpu0_customInstruction_function_id
+//cpu0_customInstruction_inputs_0
+//cpu0_customInstruction_inputs_1
+
+/**/
+/*	INFO: USER TO MODIFY CODES BELOW						*/
+/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
+/**/
+assign cpu1_customInstruction_cmd_ready = 1'b1;
+assign cpu1_customInstruction_rsp_valid = 1'b0;
+assign cpu1_customInstruction_outputs_0 = 32'd0;
+//io_cfuClk
+//io_cfyReset
+//cpu1_customInstruction_rsp_ready
+//cpu1_customInstruction_cmd_valid
+//cpu1_customInstruction_function_id
+//cpu1_customInstruction_inputs_0
+//cpu1_customInstruction_inputs_1
+
+/**/
+/*	INFO: USER TO MODIFY CODES BELOW						*/
+/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
+/**/
+assign io_apbSlave_0_PREADY = 1'b1;
+assign io_apbSlave_0_PRDATA = 32'd0;
+//io_apbSlave_0_PADDR;
+//io_apbSlave_0_PSEL;
+//io_apbSlave_0_PENABLE;
+//io_apbSlave_0_PWRITE;
+//io_apbSlave_0_PWDATA;
+//io_apbSlave_0_PSLVERROR;
+/**/
+/*	INFO: USER TO MODIFY CODES BELOW						*/
+/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
+/**/
 assign io_ddrMasters_0_aw_payload_addr = 32'd0;
 assign io_ddrMasters_0_aw_payload_id = 4'd0;
 assign io_ddrMasters_0_aw_payload_region = 4'd0;
@@ -209,78 +284,6 @@ assign io_ddrMasters_0_r_ready = 1'b1;
 //io_ddrMasters_0_r_payload_resp
 //io_ddrMasters_0_r_payload_last
 
-/**/
-/*	INFO: USER TO MODIFY CODES BELOW						*/
-/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
-/**/
-assign cpu0_customInstruction_cmd_ready = 1'b1;
-assign cpu0_customInstruction_rsp_valid = 1'b0;
-assign cpu0_customInstruction_outputs_0 = 32'd0;
-//io_cfuClk
-//io_cfyReset
-//cpu0_customInstruction_rsp_ready
-//cpu0_customInstruction_cmd_valid
-//cpu0_customInstruction_function_id
-//cpu0_customInstruction_inputs_0
-//cpu0_customInstruction_inputs_1
-
-/**/
-/*	INFO: USER TO MODIFY CODES BELOW						*/
-/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
-/**/
-assign cpu3_customInstruction_cmd_ready = 1'b1;
-assign cpu3_customInstruction_rsp_valid = 1'b0;
-assign cpu3_customInstruction_outputs_0 = 32'd0;
-//io_cfuClk
-//io_cfyReset
-//cpu3_customInstruction_rsp_ready
-//cpu3_customInstruction_cmd_valid
-//cpu3_customInstruction_function_id
-//cpu3_customInstruction_inputs_0
-//cpu3_customInstruction_inputs_1
-
-/**/
-/*	INFO: USER TO MODIFY CODES BELOW						*/
-/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
-/**/
-assign cpu1_customInstruction_cmd_ready = 1'b1;
-assign cpu1_customInstruction_rsp_valid = 1'b0;
-assign cpu1_customInstruction_outputs_0 = 32'd0;
-//io_cfuClk
-//io_cfyReset
-//cpu1_customInstruction_rsp_ready
-//cpu1_customInstruction_cmd_valid
-//cpu1_customInstruction_function_id
-//cpu1_customInstruction_inputs_0
-//cpu1_customInstruction_inputs_1
-
-/**/
-/*	INFO: USER TO MODIFY CODES BELOW						*/
-/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
-/**/
-assign cpu2_customInstruction_cmd_ready = 1'b1;
-assign cpu2_customInstruction_rsp_valid = 1'b0;
-assign cpu2_customInstruction_outputs_0 = 32'd0;
-//io_cfuClk
-//io_cfyReset
-//cpu2_customInstruction_rsp_ready
-//cpu2_customInstruction_cmd_valid
-//cpu2_customInstruction_function_id
-//cpu2_customInstruction_inputs_0
-//cpu2_customInstruction_inputs_1
-
-/**/
-/*	INFO: USER TO MODIFY CODES BELOW						*/
-/*	INFO: REFER EXAMPLE DESIGN FOR IMPLEMENTATION DETAILS	*/
-/**/
-assign io_apbSlave_0_PREADY = 1'b1;
-assign io_apbSlave_0_PRDATA = 32'd0;
-//io_apbSlave_0_PADDR;
-//io_apbSlave_0_PSEL;
-//io_apbSlave_0_PENABLE;
-//io_apbSlave_0_PWRITE;
-//io_apbSlave_0_PWDATA;
-//io_apbSlave_0_PSLVERROR;
 
 
 //axi4 bridge to various I/O
@@ -299,10 +302,7 @@ EfxSapphireHpSoc_slb u_top_peripherals(
 .system_spi_0_io_data_3_read(system_spi_0_io_data_3_read),
 .system_spi_0_io_data_3_write(system_spi_0_io_data_3_write),
 .system_spi_0_io_ss(system_spi_0_io_ss),
-.system_uart_0_io_txd(system_uart_0_io_txd),
-.system_uart_0_io_rxd(system_uart_0_io_rxd),
-.userInterruptB(userInterruptB),
-.userInterruptA(userInterruptA),
+.userInterruptC(userInterruptC),
 .jtagCtrl_tdi(jtagCtrl_tdi),
 .jtagCtrl_tdo(jtagCtrl_tdo),
 .jtagCtrl_enable(jtagCtrl_enable),
@@ -317,6 +317,7 @@ EfxSapphireHpSoc_slb u_top_peripherals(
 .ut_jtagCtrl_shift(ut_jtagCtrl_shift),
 .ut_jtagCtrl_update(ut_jtagCtrl_update),
 .ut_jtagCtrl_reset(ut_jtagCtrl_reset),
+.userInterruptB(userInterruptB),
 .io_apbSlave_0_PADDR(io_apbSlave_0_PADDR),
 .io_apbSlave_0_PSEL(io_apbSlave_0_PSEL),
 .io_apbSlave_0_PENABLE(io_apbSlave_0_PENABLE),
@@ -325,6 +326,11 @@ EfxSapphireHpSoc_slb u_top_peripherals(
 .io_apbSlave_0_PWDATA(io_apbSlave_0_PWDATA),
 .io_apbSlave_0_PRDATA(io_apbSlave_0_PRDATA),
 .io_apbSlave_0_PSLVERROR(io_apbSlave_0_PSLVERROR),
+.userInterruptA(userInterruptA),
+.system_uart_1_io_txd(system_uart_1_io_txd),
+.system_uart_1_io_rxd(system_uart_1_io_rxd),
+.system_uart_0_io_txd(system_uart_0_io_txd),
+.system_uart_0_io_rxd(system_uart_0_io_rxd),
 .axiA_awvalid(axiA_awvalid),
 .axiA_awready(axiA_awready),
 .axiA_awaddr(axiA_awaddr),

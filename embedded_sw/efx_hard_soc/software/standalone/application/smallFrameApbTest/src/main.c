@@ -19,6 +19,22 @@
 #define CONTROL_CLAIM        (1u << 0)
 #define CONTROL_RELEASE      (1u << 1)
 #define EXPECTED_MAGIC       0x5649534eu
+#define DEBUG_UART           SYSTEM_UART_0_IO_CTRL
+#define ROBOT_UART           SYSTEM_UART_1_IO_CTRL
+#define UART_BAUDRATE        500000u
+#define UART_SAMPLE_PER_BIT  8u
+#define UART_DATA_OFFSET     0x00u
+#define UART_STATUS_OFFSET   0x04u
+#define UART_TX_AVAIL_SHIFT  16u
+#define UART_TX_AVAIL_MASK   0xffu
+#define FRAME_WIDTH          160u
+#define FRAME_HEIGHT         90u
+#define FRAME_FORMAT_RGB565  1u
+#define FRAME_GAP_US         50000u
+
+#define STREAM_STOP          0u
+#define STREAM_RISCV         1u
+#define STREAM_FPGA          2u
 
 static uint32_t reg_read(uint32_t offset)
 {
@@ -30,21 +46,95 @@ static void reg_write(uint32_t offset, uint32_t value)
     *((volatile uint32_t *)(FRAME_APB_BASE + offset)) = value;
 }
 
-static void uart_puts_raw(const char *text)
+static void uart_config_debug_baud(uint32_t uart)
 {
-    while (*text) {
-        uart_write(BSP_UART_TERMINAL, *text++);
-    }
+    Uart_Config config;
+
+    config.dataLength = BITS_8;
+    config.parity = NONE;
+    config.stop = ONE;
+    config.clockDivider = BSP_CLINT_HZ /
+                          (UART_BAUDRATE * UART_SAMPLE_PER_BIT) - 1u;
+    uart_applyConfig(uart, &config);
 }
 
-static void uart_hex(uint32_t value)
+static void uart0_write_byte_blocking(uint8_t value)
 {
-    uart_writeHex(BSP_UART_TERMINAL, (int)value);
+    volatile uint32_t *status = (volatile uint32_t *)(DEBUG_UART + UART_STATUS_OFFSET);
+    volatile uint32_t *data = (volatile uint32_t *)(DEBUG_UART + UART_DATA_OFFSET);
+
+    while (((*status >> UART_TX_AVAIL_SHIFT) & UART_TX_AVAIL_MASK) == 0u) {
+    }
+    *data = value;
+}
+
+static void uart0_write_u16(uint16_t value)
+{
+    uart0_write_byte_blocking((uint8_t)(value & 0xffu));
+    uart0_write_byte_blocking((uint8_t)(value >> 8));
+}
+
+static void uart0_write_u32(uint32_t value)
+{
+    uart0_write_byte_blocking((uint8_t)(value & 0xffu));
+    uart0_write_byte_blocking((uint8_t)((value >> 8) & 0xffu));
+    uart0_write_byte_blocking((uint8_t)((value >> 16) & 0xffu));
+    uart0_write_byte_blocking((uint8_t)(value >> 24));
+}
+
+static void uart0_write_frame_word_rgb565_be(uint32_t value)
+{
+    uint16_t pixel0 = (uint16_t)(value & 0xffffu);
+    uint16_t pixel1 = (uint16_t)(value >> 16);
+
+    uart0_write_byte_blocking((uint8_t)(pixel0 >> 8));
+    uart0_write_byte_blocking((uint8_t)(pixel0 & 0xffu));
+    uart0_write_byte_blocking((uint8_t)(pixel1 >> 8));
+    uart0_write_byte_blocking((uint8_t)(pixel1 & 0xffu));
+}
+
+static uint32_t checksum_update(uint32_t checksum, uint32_t word)
+{
+    return ((checksum << 5) | (checksum >> 27)) ^ word;
+}
+
+static void uart0_write_frame_header(uint32_t seq, uint32_t payload_bytes,
+                                     uint32_t bank)
+{
+    uart0_write_byte_blocking('V');
+    uart0_write_byte_blocking('F');
+    uart0_write_byte_blocking('R');
+    uart0_write_byte_blocking('M');
+    uart0_write_byte_blocking(1);                /* protocol version */
+    uart0_write_byte_blocking(FRAME_FORMAT_RGB565);
+    uart0_write_u16(FRAME_WIDTH);
+    uart0_write_u16(FRAME_HEIGHT);
+    uart0_write_u32(seq);
+    uart0_write_u32(payload_bytes);
+    uart0_write_u32(0);                         /* checksum follows payload */
+    uart0_write_byte_blocking((uint8_t)bank);
+    uart0_write_byte_blocking(1);                /* flags: footer checksum */
+}
+
+static uint32_t uart0_poll_command(uint32_t current_mode)
+{
+    while (uart_readOccupancy(DEBUG_UART) != 0u) {
+        char cmd = uart_read(DEBUG_UART);
+        if ((cmd == 'R') || (cmd == 'r')) {
+            current_mode = STREAM_RISCV;
+        } else if ((cmd == 'F') || (cmd == 'f')) {
+            current_mode = STREAM_FPGA;
+        } else if ((cmd == 'S') || (cmd == 's')) {
+            current_mode = STREAM_STOP;
+        }
+    }
+    return current_mode;
 }
 
 void main(void)
 {
     uint32_t last_seq = 0;
+    uint32_t stream_mode = STREAM_RISCV;
 
     if ((uint32_t)csr_read(mhartid) != 0u) {
         while (1) {
@@ -52,18 +142,11 @@ void main(void)
         }
     }
 
-    bsp_init();
-    uart_puts_raw("\r\nVision 160x90 APB frame test\r\n");
-    uart_puts_raw("base=0x");
-    uart_hex(FRAME_APB_BASE);
-    uart_puts_raw(" magic=0x");
-    uart_hex(reg_read(REG_MAGIC));
-    uart_puts_raw(" dimensions=0x");
-    uart_hex(reg_read(REG_DIMENSIONS));
-    uart_puts_raw("\r\n");
+    uart_config_debug_baud(DEBUG_UART);
+    uart_config_debug_baud(ROBOT_UART);
 
     if (reg_read(REG_MAGIC) != EXPECTED_MAGIC) {
-        uart_puts_raw("ERROR: APB frame window not detected\r\n");
+        uart_writeStr(DEBUG_UART, "VISION APB ERROR\r\n");
         while (1) {
             asm volatile ("wfi");
         }
@@ -73,13 +156,14 @@ void main(void)
         uint32_t status = reg_read(REG_STATUS);
         uint32_t seq = reg_read(REG_FRAME_SEQ);
 
-        if ((status & STATUS_FRAME_VALID) && (seq != last_seq)) {
+        stream_mode = uart0_poll_command(stream_mode);
+
+        if ((stream_mode == STREAM_RISCV) &&
+            (status & STATUS_FRAME_VALID) && (seq != last_seq)) {
             uint32_t bank;
             uint32_t buffer_offset;
             uint32_t buffer_bytes;
             uint32_t word_count;
-            uint32_t first_word;
-            uint32_t last_word;
             uint32_t checksum = 0;
             uint32_t i;
             volatile uint32_t *pixels;
@@ -92,29 +176,19 @@ void main(void)
             word_count = buffer_bytes >> 2;
             pixels = (volatile uint32_t *)(FRAME_APB_BASE + buffer_offset);
 
-            first_word = pixels[0];
+            uart0_write_frame_header(seq, buffer_bytes, bank);
             for (i = 0; i < word_count; ++i) {
-                checksum = (checksum << 5) | (checksum >> 27);
-                checksum ^= pixels[i];
+                uint32_t word = pixels[i];
+                checksum = checksum_update(checksum, word);
+                uart0_write_frame_word_rgb565_be(word);
             }
-            last_word = pixels[word_count - 1u];
+            uart0_write_u32(checksum);
+
             reg_write(REG_CONTROL, CONTROL_RELEASE);
-
-            uart_puts_raw("frame seq=0x");
-            uart_hex(seq);
-            uart_puts_raw(" bank=0x");
-            uart_hex(bank);
-            uart_puts_raw(" first=0x");
-            uart_hex(first_word);
-            uart_puts_raw(" last=0x");
-            uart_hex(last_word);
-            uart_puts_raw(" checksum=0x");
-            uart_hex(checksum);
-            uart_puts_raw(" drops=0x");
-            uart_hex(reg_read(REG_DROP_COUNT));
-            uart_puts_raw("\r\n");
-
             last_seq = seq;
+            bsp_uDelay(FRAME_GAP_US);
+        } else {
+            bsp_uDelay(1000u);
         }
     }
 }

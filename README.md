@@ -99,44 +99,18 @@ The following behavior has been reproduced on hardware:
 
 This proves that the failure is not caused only by RISC-V software being linked into DDR. Releasing the Hard SoC activates its fixed external-memory/DDR Target1 path, which interferes with the FPGA video framebuffer on DDR AXI0 in the current integration.
 
-## Current Diagnostic Behavior
+## Retired FPGA UART Diagnostics
 
-`src/top.v` currently:
+The temporary FPGA UART bridge, periodic status stream, command receiver, and
+selectable `C/B/W/D/R/F/T` display modes were removed after the video path was
+hardware-verified. The production display source is fixed to the corrected
+camera stream through the 960x540 BRAM framebuffer. UART1 and UART2 now belong
+exclusively to the hardened RISC-V.
 
-- Waits for DDR configuration and both DSI `pixel_data_en` signals.
-- Holds RISC-V in reset for another five seconds.
-- Releases RISC-V and reports the release state as `rr=1` on the diagnostic UART.
-- Uses the corrected camera RGB stream as the fixed DSI source (`md=C`).
-
-The BRAM test build reports these additional UART fields:
-
-- `q=XXXX`: RAW serializer FIFO occupancy.
-- `ba=X`: at least one complete RGB565 frame is available for display.
-- `be=OU`: RAW FIFO overflow and frame-capture error flags.
-- `oc`: RAW FIFO overflow count.
-- `uc`: skipped or incomplete capture-frame count.
-- `rc`: completed display-bank swap count.
-- `fi/fo`: complete captured-frame and DSI timing-frame counters.
-- `ax=00000`: expected in BRAM mode; any `1` means FPGA DDR traffic remains.
-- `rr=X`: hardened RISC-V reset release state.
-- `gm=LLLL/MMMM/XXXX/TTTTT`: measured camera-side geometry for the last
-  complete input frame: active-line count, minimum DE clocks per line,
-  maximum DE clocks per line, and total DE clocks. For the assumed 1920x1080
-  two-pixels-per-clock stream, the expected value is
-  `gm=0438/03C0/03C0/FD200`.
-
-UART2 also accepts single-character commands at 1 Mbps without rebuilding:
-
-- `C`: BRAM double-buffer camera display (default).
-- `B`: internal color bars.
-- `W`: full white.
-- `D`: Debayer `DE` mask.
-- `R`: direct CSI RAW diagnostic view.
-- `F`: serialized RAW diagnostic view.
-- `T`: autonomous deterministic RGB565 BRAM fill/read test. It ignores CSI
-  frame markers and camera pixels, fills one complete 960x540 bank with
-  sequential addresses, freezes the write port, then swaps at a DSI frame
-  boundary.
+Historical diagnostic fields and modes remain documented below as evidence of
+how the video fault was isolated. If FPGA instrumentation is needed again,
+create a dedicated diagnostic branch and do not take either production UART
+away from the RISC-V in the deployable build.
 
 ## Mandatory Evidence-Driven Debugging
 
@@ -301,10 +275,12 @@ drops new frames. This cannot stall or reset the main display path.
 
 The OCR-only validation firmware is located at
 `embedded_sw/efx_hard_soc/software/standalone/application/smallFrameApbTest/`.
-It verifies the magic and dimensions, claims each new frame, reads all 7,200
-32-bit words, prints the first word, last word, rolling checksum, and drop
-count over RISC-V UART0, then releases the bank. It uses 3,104 bytes of the
-16 KB OCR and does not access DDR.
+It verifies the APB window, claims each new frame, sends a framed 28,800-byte
+RGB565 image over board UART1, computes the rolling checksum while sending the
+payload, appends that checksum as a footer, then releases the bank. The APB
+small-frame tap samples the final BRAM display stream, so captured colors match
+the pixels sent to DSI after channel mapping, color correction, and brightness
+gain. It runs entirely from the 16 KB OCR and does not access DDR.
 
 First hardware validation after generating a bitstream:
 
@@ -314,12 +290,8 @@ First hardware validation after generating a bitstream:
 4. Read sequence, status, dimensions, buffer offsets, and several buffer words.
 5. Confirm sequence and pixel data change when the camera scene changes.
 6. Test APB claim/release and confirm the claimed frame remains stable.
-7. Load `smallFrameApbTest.elf` into OCR and monitor UART0 at 115200 8N1.
+7. Load `smallFrameApbTest.elf` into OCR and receive board UART1 at 1,000,000 8N1.
 8. Confirm the display remains stable throughout all RISC-V reads.
-
-- `R` and `F` do not use panel-compatible frame timing. A black result in these
-  modes does not prove CSI or RAW serialization has failed; rely on their UART
-  activity fields for those stages.
 
 The display uses the original known-good 1920x1080 DSI timing. Each stored
 960x540 pixel is repeated as a 2x2 block. This does not restore discarded
@@ -335,9 +307,11 @@ Expected first BRAM-path hardware test:
 4. Stable operation has `be=00`, `oc=uc=0000`, and `rc` increasing near 30/s.
 5. `fi` should increase near 30/s and `fo` near 59/s.
 
-The 960x540 BRAM display path and hardened RISC-V JTAG/OCR operation are
-hardware-verified together. The new 160x90 APB small-frame window is the only
-unverified hardware stage in the current working tree.
+The 960x540 BRAM display path, hardened RISC-V JTAG/OCR operation, and 160x90
+APB small-frame reads are hardware-verified together. The next hardware test
+is the new dual-UART build: UART1 must produce valid `VFRM` packets while
+UART2 remains idle until robot-arm command software is added, and live MIPI
+video stays unchanged.
 
 ## Next Modification Direction
 
@@ -363,12 +337,45 @@ Recommended implementation sequence:
 
 If camera and DSI timing cannot remain stable with line buffering, the fallback is to reduce the buffered display resolution. Do not attempt to store a full 1080p frame in BRAM, and do not route the FPGA small-image writer back through the conflicting DDR AXI0 path.
 
-## UART Notes
+## UART Assignment
 
-- FPGA diagnostic UART: 1 Mbps, currently mirrored to the project `uart1_txd` and `uart2_txd` outputs.
-- RISC-V UART0 firmware: 115200 baud.
-- Current RISC-V UART0 assignment in `mem_test.peri.xml` is TX package pin E9 and RX package pin E10.
-- The official Ti375C529 devkit example uses the opposite UART direction assignment. Confirm the board schematic before relying on UART0 output; do not guess or swap pins without verification.
+- Board UART1 (`GPIOR_96` RX, `GPIOR_100` TX) connects directly to hardened
+  RISC-V UART0 at `0xE8010000`. It is the 1,000,000 baud diagnostic and image
+  stream.
+- Board UART2 (`GPIOR_97` RX, `GPIOR_101` TX) connects directly to hardened
+  RISC-V UART1 at `0xE8011000`. It is reserved for 1,000,000 baud robot-arm
+  commands and the current test firmware sends no data on it.
+- Both ports use 8 data bits, no parity, and one stop bit. Baud rate is applied
+  by RISC-V software; `io_peripheralClk` must remain 250 MHz to match
+  `PERI_FREQ=250`. There is no FPGA UART implementation in the production RTL.
+
+UART1 image packets use this little-endian layout:
+
+| Bytes | Description |
+| --- | --- |
+| 0..3 | ASCII magic `VFRM` |
+| 4 | Protocol version `1` |
+| 5 | Pixel format `1` (`RGB565`) |
+| 6..7 | Width `160` |
+| 8..9 | Height `90` |
+| 10..13 | Frame sequence |
+| 14..17 | Payload bytes `28800` |
+| 18..21 | Header checksum field, zero in protocol version `1` |
+| 22 | Claimed bank index |
+| 23 | Flags, bit 0 means a footer checksum follows the payload |
+| 24..28823 | RGB565 payload, two little-endian pixels per APB word |
+| 28824..28827 | Rolling checksum over the actual transmitted payload |
+
+Connect to Board UART1, then receive and save one frame with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/receive_uart_frame.ps1 `
+  -Port COM8 -Output vision_frame.ppm
+```
+
+The tool resynchronizes on `VFRM`, validates the rolling checksum, converts
+RGB565 to RGB888, and writes a directly viewable PPM file. Replace `COM8` with
+the PC serial port connected to board UART1.
 
 ## Programming and Test Procedure
 
@@ -378,16 +385,17 @@ Deployable artifacts:
 
 - FPGA bitstream: `outflow/mem_test.bit`
 - FPGA programming image: `outflow/mem_test.hex`
-- OCR RISC-V firmware: `embedded_sw/efx_hard_soc/software/standalone/uart/ocrUartHeartbeat/build/`
+- OCR RISC-V firmware: `embedded_sw/efx_hard_soc/software/standalone/application/smallFrameApbTest/build/`
 
 Basic hardware test:
 
 1. Generate the Efinity IP only when IP settings have changed.
 2. Build the FPGA project and confirm that `outflow/mem_test.bit` is updated.
 3. Program `mem_test.bit` through JTAG.
-4. Monitor the FPGA diagnostic UART at 1 Mbps.
-5. Confirm live video and healthy AXI status before RISC-V release.
-6. Record the exact screen and UART transition when `rr` changes.
+4. Load `smallFrameApbTest.elf` through JTAG/OpenOCD.
+5. Receive `VFRM` packets from board UART1 at 1,000,000 8N1.
+6. Confirm the frame sequence and image payload change with the camera scene.
+7. Confirm board UART2 remains idle and the live display remains stable.
 
 RISC-V build outputs (`.elf`, `.hex`, `.bin`, `.map`) and final FPGA images are committed intentionally. A checked-out revision must retain the exact artifacts used for that hardware test.
 

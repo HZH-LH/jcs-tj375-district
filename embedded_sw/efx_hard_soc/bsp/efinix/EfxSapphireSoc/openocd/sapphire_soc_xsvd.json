@@ -1157,6 +1157,159 @@
                         }
                     }
                 },
+                "uart1": {
+                    "description": "Universal Asynchronous Receiver/Transmitter (UART) 1 Peripheral",
+                    "baseAddress": "0xe8011000",
+                    "size": "0x40",
+                    "resetMask": "none",
+                    "groupName": "uart",
+                    "registers": {
+                        "data": {
+                            "description": "Transmit Data Register",
+                            "addressOffset": "0x0000",
+                            "fields": {
+                                "data": {
+                                    "description": "Transmit/ Receive data",
+                                    "bitOffset": "0",
+                                    "bitWidth": "8"
+                                },
+                                "dataValid": {
+                                    "description": "Read data valid",
+                                    "bitOffset": "16",
+                                    "bitWidth": "1",
+                                    "access": "r"
+                                }
+                            }
+                        },
+                        "status": {
+                            "description": "Status Register",
+                            "addressOffset": "0x0004",
+                            "fields": {
+                                "txInterruptEnable": {
+                                    "description": "Enable interrupt when TX FIFO is empty",
+                                    "bitOffset": "0",
+                                    "bitWidth": "1"
+                                },
+                                "rxInterruptEnable": {
+                                    "description": "Enable interrupt when RX FIFO is not empty",
+                                    "bitOffset": "1",
+                                    "bitWidth": "1"
+                                },
+                                "txInterrupt": {
+                                    "description": "Interrupt when TX FIFO is empty",
+                                    "bitOffset": "8",
+                                    "bitWidth": "1",
+                                    "access": "r"
+                                },
+                                "rxInterrupt": {
+                                    "description": "Interrupt when RX FIFO is not empty",
+                                    "bitOffset": "9",
+                                    "bitWidth": "1",
+                                    "access": "r"
+                                },
+                                "writeBusy": {
+                                    "description": "Write operation in progress",
+                                    "bitOffset": "15",
+                                    "bitWidth": "1",
+                                    "access": "r"
+                                },
+                                "writeAvailability": {
+                                    "description": "UART FIFO availability",
+                                    "bitOffset": "16",
+                                    "bitWidth": "8",
+                                    "access": "r"
+                                },
+                                "readOccupancy": {
+                                    "description": "UART FIFO occupancy",
+                                    "bitOffset": "24",
+                                    "bitWidth": "8",
+                                    "access": "r"
+                                }
+                            }
+                        },
+                        "clockDivider": {
+                            "description": "Clock Divider Register",
+                            "addressOffset": "0x0008",
+                            "fields": {
+                                "divFac": {
+                                    "description": "Divider factor for UART baud rate",
+                                    "bitOffset": "0",
+                                    "bitWidth": "20",
+                                    "access": "w"
+                                }
+                            }
+                        },
+                        "config": {
+                            "description": "Config Register",
+                            "addressOffset": "0x000C",
+                            "fields": {
+                                "dataLen": {
+                                    "description": "Data length",
+                                    "bitOffset": "0",
+                                    "bitWidth": "3",
+                                    "access": "w"
+                                },
+                                "parity": {
+                                    "description": "Parity bit number; 0: None; 1: Even; 2: Odd",
+                                    "bitOffset": "8",
+                                    "bitWidth": "2",
+                                    "access": "w"
+                                },
+                                "stop": {
+                                    "description": "Stop bit number",
+                                    "bitOffset": "16",
+                                    "bitWidth": "1",
+                                    "access": "w"
+                                }
+                            }
+                        },
+                        "errorBreak": {
+                            "description": "Error Break Register",
+                            "addressOffset": "0x0010",
+                            "fields": {
+                                "readError": {
+                                    "description": "Read error. Write 1 to reset error",
+                                    "bitOffset": "0",
+                                    "bitWidth": "1"
+                                },
+                                "readOverflow": {
+                                    "description": "Read overflow error. Write 1 to reset error",
+                                    "bitOffset": "1",
+                                    "bitWidth": "1"
+                                },
+                                "readBreak": {
+                                    "description": "Read break occur",
+                                    "bitOffset": "8",
+                                    "bitWidth": "1",
+                                    "access": "r"
+                                },
+                                "breakDetect": {
+                                    "description": "Break detected during read operation. Write 1 to reset error",
+                                    "bitOffset": "9",
+                                    "bitWidth": "1"
+                                },
+                                "enableBreak": {
+                                    "description": "Enable break",
+                                    "bitOffset": "10",
+                                    "bitWidth": "1",
+                                    "access": "w"
+                                },
+                                "disableBreak": {
+                                    "description": "Disable break",
+                                    "bitOffset": "11",
+                                    "bitWidth": "1",
+                                    "access": "w"
+                                }
+                            }
+                        }
+                    },
+                    "interrupts": {
+                        "uart1": {
+                            "description": "UART1 Interrupt",
+                            "value": "SYSTEM_PLIC_USER_INTERRUPT_B_INTERRUPT"
+                        }
+                    }
+                },
                 "spi0": {
                     "description": "Serial Peripheral Interface (SPI) 0 Peripheral",
                     "baseAddress": "0xe8030000",
@@ -1366,7 +1519,7 @@
                     "interrupts": {
                         "spi0": {
                             "description": "SPI0 Interrupt",
-                            "value": "SYSTEM_PLIC_USER_INTERRUPT_B_INTERRUPT"
+                            "value": "SYSTEM_PLIC_USER_INTERRUPT_C_INTERRUPT"
                         }
                     }
                 },

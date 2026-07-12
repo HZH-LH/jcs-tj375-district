@@ -75,6 +75,8 @@ port (
     system_spi_0_io_ss : out std_logic_vector(3 downto 0);
     system_uart_0_io_rxd : in std_logic;
     system_uart_0_io_txd : out std_logic;
+    system_uart_1_io_rxd : in std_logic;
+    system_uart_1_io_txd : out std_logic;
     cfg_done : in std_logic;
     cfg_start : out std_logic;
     cfg_sel : out std_logic;
@@ -117,6 +119,7 @@ port (
     axiA_rready : in std_logic;
     userInterruptA : out std_logic;
     userInterruptB : out std_logic;
+    userInterruptC : out std_logic;
     io_apbSlave_0_PADDR : out std_logic_vector(31 downto 0);
     io_apbSlave_0_PENABLE : out std_logic;
     io_apbSlave_0_PRDATA : in std_logic_vector(31 downto 0);
@@ -168,6 +171,8 @@ port map (
     system_spi_0_io_ss => system_spi_0_io_ss,
     system_uart_0_io_rxd => system_uart_0_io_rxd,
     system_uart_0_io_txd => system_uart_0_io_txd,
+    system_uart_1_io_rxd => system_uart_1_io_rxd,
+    system_uart_1_io_txd => system_uart_1_io_txd,
     cfg_done => cfg_done,
     cfg_start => cfg_start,
     cfg_sel => cfg_sel,
@@ -210,6 +215,7 @@ port map (
     axiA_rready => axiA_rready,
     userInterruptA => userInterruptA,
     userInterruptB => userInterruptB,
+    userInterruptC => userInterruptC,
     io_apbSlave_0_PADDR => io_apbSlave_0_PADDR,
     io_apbSlave_0_PENABLE => io_apbSlave_0_PENABLE,
     io_apbSlave_0_PRDATA => io_apbSlave_0_PRDATA,
